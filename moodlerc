@@ -1,0 +1,31 @@
+# This is a configuration file for moodle.py application.
+# If you are in doubt, email to 
+# dilawar@ee.iitb.ac.in
+# usename is your moddle username.
+# password is your moddle password.
+#
+url = http://moodle.iitb.ac.in/login/index.php
+username = dilawars
+password = %rashmirathi
+proxy = false
+# name or id.
+course = 1638
+activities = Assignments
+#activity = Lab session 1
+#activity = Assignment-1 Submission
+activity = Assignment02
+activity = Assignment 03
+#activity = Final Assignment Submission
+#activity = Assignment 5
+#activity = Verilog 1
+#activity = Verilog Assignment 2
+#activity = Verilog Assignment 3
+download = true
+# It must end with / character.
+downloaddir = /home/dilawar/Works/myrepo/Courses/VLSIDesignLab/
+extract = true
+language = vhdl
+compile = false
+compare = true
+cxx = ghdl
+autotest = false
