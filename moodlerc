@@ -6,7 +6,7 @@
 #
 url = http://moodle.iitb.ac.in/login/index.php
 username = dilawars
-password = %rashmirathi
+password = 
 proxy = false
 # name or id.
 course = 1638
