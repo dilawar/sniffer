@@ -51,6 +51,7 @@ class IitbMoodle():
         self.proxy = "false"
         self.extract = 'true'
         self.language = 'vhdl'
+        self.regex = ''
         self.compile = 'false'
         self.compare = 'false'
         self.download = 'true'
@@ -66,7 +67,6 @@ class IitbMoodle():
             sys.exit(0)
 
         for line in f :
-            
             if line[0] == '#' :
                 pass
 
@@ -119,6 +119,9 @@ class IitbMoodle():
                 elif key.split()[0] == 'language' :
                    self.language = val.split()[0]
 
+                elif key.split()[0] == 'regex' :
+                   self.regex = val.split()[0]
+
                 elif key.split()[0] == 'compare' :
                    self.compare = val.split()[0]
 
@@ -129,7 +132,7 @@ class IitbMoodle():
                    self.cxx = val.split()[0]
 
                 else :
-                     print ("Unknow configuration variable.. Ignoring.")
+                     print "Unknow configuration variable {0}..  Ignoring.".format(key.split()[0])
 
 
     def make_connection(self):
@@ -180,21 +183,21 @@ class IitbMoodle():
         if self.download == 'true':
             print (" |- Acquiring link of activity ... ")
             #print self.activity_name
-            #print self.br.geturl()
+            print self.br.geturl()
             #print self.br.title()
+            #for link in self.br.links() :
+            #    print link.text, link.url
             activity_res = self.br.follow_link(text_regex=self.activity_name)
             assert self.br.viewing_html()
             print self.br.title()
             print self.br.geturl()
+            
             for act in self.activities :
-                print act
                 act_res = self.br.follow_link(text_regex=act)
                 act_url = act_res.geturl()
                 [url, act_id] = act_url.split('id=')
                 self.activity_id.append(act_id)
-                view_act_res = self.br.follow_link(text_regex=r".*(View)(\s+)[0-9]*(\s+)(submitted).*")
-                self.fetch_activity_links(view_act_res)
-                self.download_files(act)
+                view_act_res = self.br.follow_link(text_regex=r".*(Download all).*")
                 print("Successfully downloaded data for this activity!")
                 self.br.open(activity_res.geturl())
             else:
@@ -290,5 +293,9 @@ class IitbMoodle():
             print " |- Extracting archive ...{0}".format(file)
             subprocess.call(["unrar", "x", "-o+", file], stdout=subprocess.PIPE)
                    
-
+        listing = glob.glob(path+'/*tar')
+        for file in listing:
+            print " |- Extracting archive ...{0}".format(file)
+            subprocess.call(["tar", "xvf", file], stdout=subprocess.PIPE)
+         
 

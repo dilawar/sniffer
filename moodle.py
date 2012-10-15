@@ -68,7 +68,7 @@ if moodle.compare == 'true' :
     '''
     print moodle.root_dir
     for i in moodle.activities :
-        cmp = CompareProgram(moodle.language)
+        cmp = CompareProgram(moodle.language, moodle.regex)
         # second argument, if set to True will backup and delete esisting stats. 
         cmp.set_dir_path(moodle.root_dir+i, True)
         cmp.traverse_and_compare()

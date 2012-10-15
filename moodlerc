@@ -1,31 +1,44 @@
 # This is a configuration file for moodle.py application.
 # If you are in doubt, email to 
+#
+# THIS IS MODIFIED TO WORK WITH NEW MOODLE.
+#
 # dilawar@ee.iitb.ac.in
 # usename is your moddle username.
 # password is your moddle password.
 #
 url = http://moodle.iitb.ac.in/login/index.php
 username = dilawars
-password = 
+password = lala
 proxy = false
-# name or id.
-course = 1638
-activities = Assignments
-#activity = Lab session 1
-#activity = Assignment-1 Submission
-activity = Assignment02
-activity = Assignment 03
-#activity = Final Assignment Submission
+course = EE 677
+## Acitivities are to be specified by dates.
+activities = 30 August
+activity = Submissions
+#activity = Lab session 2
+#activity = Lab session 3
+#activity = Lab session 4
 #activity = Assignment 5
 #activity = Verilog 1
 #activity = Verilog Assignment 2
 #activity = Verilog Assignment 3
-download = true
+#activity = VHDL Project
+#activity = VHDL _ Late submissions
+download = fasle
 # It must end with / character.
-downloaddir = /home/dilawar/Works/myrepo/Courses/VLSIDesignLab/
-extract = true
-language = vhdl
+downloaddir = /home/dilawar/Works/hpc21/2012ee677/Assignment01/
+extract = false
+# Specify the language. If regex in the next line is empty then default regex is
+# used. Else regex will be used but the file will be considered belong to this
+# langauge familty.
+language = ctype
+regex = \w+meth.*c.*
+# Whether you want to compile the programs. Need to write extensive code for
+# this.
 compile = false
+# This flag must always be true, if  one wants to compile the program.
 compare = true
-cxx = ghdl
+# specifier the compiler.
+cxx = clang
+# add some test to test programs.
 autotest = false

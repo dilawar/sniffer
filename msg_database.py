@@ -124,8 +124,7 @@ class CreateMsgAndDatabase():
         else :
             print 'File grades.txt (CSV) does not exists in {0}'\
                     .format(self.down_dir)
-            print 'Not creating emails.'
-            return 
+            sys.exit(32)
         
         # create data_base of emails and marks. 
         dict_students = cl.defaultdict(list)

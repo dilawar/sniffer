@@ -1,0 +1,72 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+CompareProgram	compare_programs.py	/^class CompareProgram():$/;"	c
+CreateGraph	create_graph.py	/^class CreateGraph():$/;"	c
+CreateMsgAndDatabase	msg_database.py	/^class CreateMsgAndDatabase():$/;"	c
+CreateMsgAndDatabase	save_emails.py	/^class CreateMsgAndDatabase():$/;"	c
+IitbMoodle	iitb_moodle.py	/^class IitbMoodle():$/;"	c
+NetworkPrograms	process_log.py	/^class NetworkPrograms():$/;"	c
+VHDL	lang_vhdl.py	/^class VHDL:$/;"	c
+Verilog	lang_verilog.py	/^class Verilog:$/;"	c
+__init__	compare_programs.py	/^    def __init__(self, lang):$/;"	m	class:CompareProgram
+__init__	create_graph.py	/^    def __init__(self, dir):$/;"	m	class:CreateGraph
+__init__	iitb_moodle.py	/^    def __init__(self):$/;"	m	class:IitbMoodle
+__init__	lang_verilog.py	/^    def __init__(self):$/;"	m	class:Verilog
+__init__	lang_vhdl.py	/^    def __init__(self):$/;"	m	class:VHDL
+__init__	msg_database.py	/^    def __init__(self, dir, activity_name):$/;"	m	class:CreateMsgAndDatabase
+__init__	process_log.py	/^    def __init__(self, dir, activity_name):$/;"	m	class:NetworkPrograms
+__init__	save_emails.py	/^    def __init__(self, dir, activity_name):$/;"	m	class:CreateMsgAndDatabase
+add_test_vectors	lang_vhdl.py	/^    def add_test_vectors(self, dir):$/;"	m	class:VHDL
+add_testbenches	lang_vhdl.py	/^    def add_testbenches(self, component, port):$/;"	m	class:VHDL
+cmp	moodle.py	/^        cmp = CompareProgram(moodle.language)$/;"	v
+compare_with_programs	compare_programs.py	/^    def compare_with_programs(self, count,  file, dict):$/;"	m	class:CompareProgram
+compile_testbench	lang_vhdl.py	/^    def compile_testbench(self, dir, cxx):$/;"	m	class:VHDL
+create_dict_of_program	compare_programs.py	/^    def create_dict_of_program(self):$/;"	m	class:CompareProgram
+create_lists	create_graph.py	/^    def create_lists(self):$/;"	m	class:CreateGraph
+create_moodle_database	msg_database.py	/^    def create_moodle_database(self, convict_dict, accused_dict) :$/;"	m	class:CreateMsgAndDatabase
+create_moodle_database	save_emails.py	/^    def create_moodle_database(self) :$/;"	m	class:CreateMsgAndDatabase
+create_msg_dictionaries	process_log.py	/^    def create_msg_dictionaries(self):$/;"	m	class:NetworkPrograms
+create_network	create_graph.py	/^    def create_network(self):$/;"	m	class:CreateGraph
+create_network	process_log.py	/^    def create_network(self):$/;"	m	class:NetworkPrograms
+create_student_dict	process_log.py	/^    def create_student_dict(self):$/;"	m	class:NetworkPrograms
+dirName	lang_verilog.py	/^    def dirName(self, dir):$/;"	m	class:Verilog
+dirName	lang_vhdl.py	/^    def dirName(self, dir):$/;"	m	class:VHDL
+download_data	iitb_moodle.py	/^    def download_data(self) :$/;"	m	class:IitbMoodle
+download_files	iitb_moodle.py	/^    def download_files(self, act) :$/;"	m	class:IitbMoodle
+draw_and_save_grapgh	create_graph.py	/^    def draw_and_save_grapgh(self):$/;"	m	class:CreateGraph
+extract_asssignments	iitb_moodle.py	/^    def extract_asssignments(self, dir):$/;"	m	class:IitbMoodle
+fetch_activity_links	iitb_moodle.py	/^    def fetch_activity_links(self, link_res):$/;"	m	class:IitbMoodle
+fix_text	lang_verilog.py	/^    def fix_text(self, text, lang) :$/;"	m	class:Verilog
+fix_text	lang_vhdl.py	/^    def fix_text(self, text, lang) :$/;"	m	class:VHDL
+generate_plagiarism_graph	process_log.py	/^    def generate_plagiarism_graph(self):$/;"	m	class:NetworkPrograms
+get_all_programs	compare_programs.py	/^    def get_all_programs(self) :$/;"	m	class:CompareProgram
+get_course_page	iitb_moodle.py	/^    def get_course_page(self):$/;"	m	class:IitbMoodle
+get_log_list	compare_programs.py	/^    def get_log_list(self):$/;"	m	class:CompareProgram
+get_ports	lang_vhdl.py	/^    def get_ports(self, test_bench, data):$/;"	m	class:VHDL
+get_student_name	process_log.py	/^    def get_student_name(self, file_name):$/;"	m	class:NetworkPrograms
+goto_main_activity	iitb_moodle.py	/^    def goto_main_activity(self):$/;"	m	class:IitbMoodle
+init_log_list	process_log.py	/^    def init_log_list(self):$/;"	m	class:NetworkPrograms
+init_log_streams	compare_programs.py	/^    def init_log_streams(self):$/;"	m	class:CompareProgram
+lang	moodle.py	/^lang = VHDL()$/;"	v
+make_connection	iitb_moodle.py	/^    def make_connection(self):$/;"	m	class:IitbMoodle
+moodle	moodle.py	/^moodle = IitbMoodle()$/;"	v
+net	moodle.py	/^        net = NetworkPrograms(cmp.log_dir, i)$/;"	v
+network	analyse_programs.py	/^network = CreateNetwork()$/;"	v
+open_stat_file	create_graph.py	/^    def open_stat_file(self):$/;"	m	class:CreateGraph
+plag	analyse_programs.py	/^plag = CompareProgram()$/;"	v
+read_configuration	iitb_moodle.py	/^    def read_configuration(self):$/;"	m	class:IitbMoodle
+safe_backup	compare_programs.py	/^    def safe_backup(self, path, keep_original=True):$/;"	m	class:CompareProgram
+save_emails_accused	msg_database.py	/^    def save_emails_accused(self, convict_dict, accused_dict):$/;"	m	class:CreateMsgAndDatabase
+save_emails_accused	save_emails.py	/^    def save_emails_accused(self, convict_dict, accused_dict):$/;"	m	class:CreateMsgAndDatabase
+save_emails_convicted	msg_database.py	/^    def save_emails_convicted(self, convict_dict, accused_dict):$/;"	m	class:CreateMsgAndDatabase
+save_emails_convicted	save_emails.py	/^    def save_emails_convicted(self, convict_dict, accused_dict):$/;"	m	class:CreateMsgAndDatabase
+save_logs	compare_programs.py	/^    def save_logs(self):$/;"	m	class:CompareProgram
+send_emails	process_log.py	/^    def send_emails(self):$/;"	m	class:NetworkPrograms
+set_dir_path	compare_programs.py	/^    def set_dir_path(self, dir, delFlag):$/;"	m	class:CompareProgram
+set_proxy	iitb_moodle.py	/^    def set_proxy(self):$/;"	m	class:IitbMoodle
+shorten_file_name	process_log.py	/^    def shorten_file_name(self, file_name):$/;"	m	class:NetworkPrograms
+traverse_and_compare	compare_programs.py	/^    def traverse_and_compare(self):$/;"	m	class:CompareProgram
