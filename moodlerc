@@ -3,6 +3,8 @@
 #
 # THIS IS MODIFIED TO WORK WITH NEW MOODLE.
 #
+# create a link to ~/.moodlerc
+#
 # dilawar@ee.iitb.ac.in
 # usename is your moddle username.
 # password is your moddle password.
