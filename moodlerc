@@ -31,8 +31,8 @@ extract = false
 # Specify the language. If regex in the next line is empty then default regex is
 # used. Else regex will be used but the file will be considered belong to this
 # langauge familty.
-language = pdf
-regex = \w+.*.pdf$
+language = txt
+regex = \w+.*.dat[~]?$
 # Whether you want to compile the programs. Need to write extensive code for
 # this.
 compile = false
