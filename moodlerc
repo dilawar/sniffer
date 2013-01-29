@@ -26,13 +26,13 @@ activity = Submissions
 #activity = VHDL _ Late submissions
 download = fasle
 # It must end with / character.
-downloaddir = /home/dilawar/Works/hpc21/2012ee677/Assignment01/
+downloaddir = /home/dilawar/Works/hpc21/2013ee668/Assignments/A1/
 extract = false
 # Specify the language. If regex in the next line is empty then default regex is
 # used. Else regex will be used but the file will be considered belong to this
 # langauge familty.
-language = ctype
-regex = \w+meth.*c.*
+language = pdf
+regex = \w+.*.pdf$
 # Whether you want to compile the programs. Need to write extensive code for
 # this.
 compile = false

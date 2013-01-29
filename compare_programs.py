@@ -268,17 +268,17 @@ class CompareProgram():
                           self.log_list.append([f1.name, f2.name\
                                   , ratio ,f_ratio, w, w/len(lst)])
 
-  #                        if ratio > 0.27 and ratio< 0.42  :
-  #                            print '   Mild copying is possible in following files'
-  #                            print '   |- {1}\n   |- {2}\n   ++MATCH INDEX: {0} \n'\
-  #                                    .format(ratio, f1.name, f2.name)
-  #                            self.log_file_low.write(log)
-  #                        if ratio >= 0.42 and ratio < 0.53  :
-  #                            print '   Significant copying possible in files'
-  #                            print '   |- {1}\n   |- {2}\n   ++MATCH INDEX: {0} \n'\
-  #                                    .format(ratio, f1.name, f2.name)
-  #                            self.log_file_med.write(log)
-                          if ratio >= 0.53 and ratio <= 0.59 :
+                          if ratio > 0.27 and ratio< 0.42  :
+                              print '   Mild copying is possible in following files'
+                              print '   |- {1}\n   |- {2}\n   ++MATCH INDEX: {0} \n'\
+                                      .format(ratio, f1.name, f2.name)
+                              self.log_file_low.write(log)
+                          if ratio >= 0.42 and ratio < 0.53  :
+                              print '   Significant copying possible in files'
+                              print '   |- {1}\n   |- {2}\n   ++MATCH INDEX: {0} \n'\
+                                      .format(ratio, f1.name, f2.name)
+                              self.log_file_med.write(log)
+                         if ratio >= 0.53 and ratio <= 0.59 :
                               print '   *These two files matches significantly. Check manually.'
                               print '   |- {1}\n   |- {2}\n   ++MATCH INDEX: {0} \n'\
                                       .format(ratio, f1.name, f2.name)
