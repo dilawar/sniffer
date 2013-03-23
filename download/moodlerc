@@ -1,0 +1,39 @@
+[moodle]
+# This is a configuration file for moodle.py application.
+# If you are in doubt, email to 
+#
+# THIS IS MODIFIED TO WORK WITH NEW MOODLE.
+#
+# create a link to ~/.moodlerc
+#
+# dilawar@ee.iitb.ac.in
+# usename is your moddle username.
+# password is your moddle password.
+#
+url = http://moodle.iitb.ac.in/login/index.php
+username = dilawars
+password = 
+proxy = false
+course = EE 668-2012-2
+## Acitivities are to be specified by dates.
+activity_type = assign
+# Separate activities by ;
+activity = Simple RTL Design; Lab session 2
+download = true
+# It must end with / character.
+downloaddir = /home/dilawar/Works/hpc21/2013ee668/Assignments/A1/
+extract = false
+# Specify the language. If regex in the next line is empty then default regex is
+# used. Else regex will be used but the file will be considered belong to this
+# langauge familty.
+language = txt
+regex = \w+.*.dat[~]?$
+# Whether you want to compile the programs. Need to write extensive code for
+# this.
+compile = false
+# This flag must always be true, if  one wants to compile the program.
+compare = true
+# specifier the compiler.
+cxx = clang
+# add some test to test programs.
+autotest = false
