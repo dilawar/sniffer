@@ -243,35 +243,32 @@ class CompareProgram():
                     VALUES (?, ?, ?, ?, ?, ?)'''
               queryRation = '''UPDATE match SET severity=? WHERE fileA=?
                     AND fileB=?'''
+             
+              self.c.execute(query, (userA, f1.name, len(textA),
+                  f2.name, len(textB), s.ratio()))
               # there is no use of w < 200 file.
               if(len(text1.split()) < 3 or len(text2.split()) < 3) :
                   pass
-
               elif len(text1.split()) > 200 or len(text2.split()) > 200 :
                 f_ratio = 0.00
                 f_ratio = float(len(text1.split()))/ float(len(text2.split()))
-                log = '{0}, {1}, {2}, {3}, {4}, {5} \n'.format(\
-                    f_ratio , w, w/len(lst) ,s.ratio(), f1.name, f2.name )
-                self.c.execute(query, (userA, f1.name, len(textA),
-                  f2.name, len(textB), s.ratio()))
-
                 if s.ratio() > 0.27 and s.ratio() < 0.42  :
                   print '   Mild copying is possible in following files'
                   print '   |- {1}\n   |- {2}\n   ++MATCH INDEX: {0} \n'\
                           .format(s.ratio(), f1.name, f2.name)
                   self.c.execute(queryRation, ("mild", f1.name,
                     f2.name))
-                if s.ratio() >= 0.42 and s.ratio() < 0.53  :
+                elif s.ratio() >= 0.42 and s.ratio() < 0.53  :
                   print '   Significant copying possible in files'
                   print '   |- {1}\n   |- {2}\n   ++MATCH INDEX: {0} \n'\
                           .format(s.ratio(), f1.name, f2.name)
                   self.c.execute(queryRation, ("high", f1.name, f2.name))
-                if s.ratio() >= 0.53 and s.ratio() <= 0.62 :
+                elif s.ratio() >= 0.53 and s.ratio() <= 0.62 :
                   print '   *These two files matches significantly. Check manually.'
                   print '   |- {1}\n   |- {2}\n   ++MATCH INDEX: {0} \n'\
                           .format(s.ratio(), f1.name, f2.name)
                   self.c.execute(queryRation, ("veryhigh", f1.name, f2.name))
-                if s.ratio() >= 0.62 :
+                elif s.ratio() >= 0.62 :
                   print '   *NOTICE : These files are copied!'
                   print '   |- {1}\n   |- {2}\n   ++MATCH INDEX: {0} \n'\
                           .format(s.ratio(), f1.name, f2.name)
@@ -280,6 +277,7 @@ class CompareProgram():
                   self.c.execute(queryRation, ("noise", f1.name,
                     f2.name))
 
+                self.db.commit()
               # Handle small files. Divide s.ratio() by a suitable number.
               else :
                   a = [30,50,100,150,200,250,300]
@@ -290,34 +288,31 @@ class CompareProgram():
                   scaled_by = float(min(line1, line2))/30.0
                   f_ratio = 0.00
                   f_ratio = float(len(text1.split()))/ float(len(text2.split()))
-                  ratio = s.ratio() * numpy.polyval(poly_fit, min(line1, line2))
-                  log = '{0}, {1}, {2}, {3}, {4}, {5} \n'.format(\
-                      f_ratio , w, w/len(lst) ,ratio, f1.name, f2.name )
+                  ratio = s.ratio() * numpy.polyval(poly_fit, int(min(line1,
+                    line2)))
                   if ratio > 0.27 and ratio< 0.42  :
                     print '   Mild copying is possible in following files'
                     print '   |- {1}\n   |- {2}\n   ++MATCH INDEX: {0} \n'\
                          .format(ratio, f1.name, f2.name)
                     self.c.execute(queryRation, ("mild", f1.name, f2.name))
-                  if ratio >= 0.42 and ratio < 0.53  :
+                  elif ratio >= 0.42 and ratio < 0.53  :
                     print '   Significant copying possible in files'
                     print '   |- {1}\n   |- {2}\n   ++MATCH INDEX: {0} \n'\
                             .format(ratio, f1.name, f2.name)
                     self.c.execute(queryRation, ("high", f1.name, f2.name))
-                  if ratio >= 0.53 and ratio <= 0.59 :
+                  elif ratio >= 0.53 and ratio <= 0.59 :
                     print '   *These two files matches significantly. Check manually.'
                     print '   |- {1}\n   |- {2}\n   ++MATCH INDEX: {0} \n'\
                             .format(ratio, f1.name, f2.name)
                     self.c.execute(queryRation,("veryhigh", f1.name, f2.name)) 
-                  if ratio >= 0.59 :
+                  elif ratio >= 0.59 :
                     print '   *NOTICE : These files are copied!'
                     print '   |- {1}\n   |- {2}\n   ++MATCH INDEX: {0} \n'\
                             .format(ratio, f1.name, f2.name)
                     self.c.execute(queryRation, ("identical", f1.name, f2.name))
-
                   else :
                     self.c.execute(queryRation, ("identical", f1.name, f2.name))
-      # Commit 
-      self.db.commit()
+                  self.db.commit()
 
     def traverse_and_compare(self):
         ''' Take a file and compare it with all other files which have not been
