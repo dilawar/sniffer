@@ -10,13 +10,15 @@ def findListingsToCompare(config, db) :
   print("[I] Total {0} distint owner of files ".format(len(users)))
   # Now for each of these students fetch their files.
   for user in users :
-    query = '''SELECT name, root, size FROM listings WHERE owner=?'''
+    query = '''SELECT name, root, size FROM listings WHERE owner=? 
+              ORDER BY owner DESC '''
     files = c.execute(query, (user)).fetchall()
     listings[user] = files 
   newListings = filterListing(config, listings)
   oldNum = sum([len(i) for i in listings.itervalues()])
   newNum = sum([len(i) for i in newListings.itervalues()])
-  print(" {0} : {1}".format(oldNum, newNum))
+  print("[I] Total {0} files filtered.".format(oldNum - newNum))
+  return newListings 
 
 def filterListing(config, listings) :
   max_size = int(config.get('filter', 'max_size'))
@@ -42,3 +44,7 @@ def filterListing(config, listings) :
         newFiles.append(file)
     newListings[user] = newFiles
   return newListings
+
+
+def compare(config, db) :
+  listings = findListingsToCompare(config, db)
