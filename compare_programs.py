@@ -186,7 +186,7 @@ class CompareProgram():
       self.db.commit()
        
       
-    def compare_with_programs(self, count,  file, dict, userA):
+    def compare_with_programs(self,  file, dict, userA, count):
       '''
       Dictionary dict contains all files submitted by a single student. File
       'file' is compared with this dictionary.
@@ -228,9 +228,12 @@ class CompareProgram():
               else :
                   print "This language is not supported."
 
-              print " ++ Comparing {0}:{2} <-> {1} : {3}".format(f1.name.split('/').pop()
+              print "+{4}/{5} Comparing {0}:{2} <-> {1} : {3}".format(f1.name.split('/').pop()
                              , f2.name.split('/').pop()
-                             , len(textA), len(textB))
+                             , len(textA), len(textB)
+                             , count 
+                             , len(self.file_dict)
+                             )
               s = difflib.SequenceMatcher(None, text1, text2)
               lst = s.get_matching_blocks()
               w = 0
@@ -322,7 +325,9 @@ class CompareProgram():
         self.create_dict_of_program()
         cnt0 = 0
         comp = dict()
+        count = 0
         for i in self.file_dict :
+            count += 1
             id1, name1 = i
             cnt1 = 0
             print 'Comparing for {0}'.format(name1)
@@ -334,7 +339,8 @@ class CompareProgram():
                     else :
                         lst.append(id2)
                         cnt1 += len(self.file_dict[j])
-                        self.compare_with_programs(cnt0, fl1, self.file_dict[j], name1)
+                        self.compare_with_programs(fl1, self.file_dict[j],
+                            name1, count)
                 comp[id1] = lst
                 cnt0 += cnt1
             print '\n * For {0}, total {1} comparison * \n'.format(name1, cnt1)
