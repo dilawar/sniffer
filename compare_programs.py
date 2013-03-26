@@ -208,23 +208,23 @@ class CompareProgram():
             if float(lenTextA)/lenTextB > 0.2 or lenTextA/lenTextB  < 5 :
               if self.lang == 'vhdl' :
                   vhdl = VHDL()
-                  text1, line1, word_count1 = vhdl.fix_text(textA, self.lang)
-                  text2, line2, word_count2 = vhdl.fix_text(textB, self.lang)
+                  text1, line1 = vhdl.fix_text(textA)
+                  text2, line2 = vhdl.fix_text(textB)
               
               elif self.lang == 'verilog' :
                   verilog = Verilog()
-                  text1, line1 = verilog.fix_text(textA, self.lang)
-                  text2, line2  = verilog.fix_text(textB, self.lang)
+                  text1, line1 = verilog.fix_text(textA)
+                  text2, line2  = verilog.fix_text(textB)
         
               elif self.lang == 'ctype' :
                   ctype = Ctype()
-                  text1, line1 = ctype.fix_text(textA, self.lang)
-                  text2, line2  = ctype.fix_text(textB, self.lang)
+                  text1, line1 = ctype.fix_text(textA)
+                  text2, line2  = ctype.fix_text(textB)
         
               elif self.lang == 'pdf' :
                   pdf = Pdf()
-                  text1, line1 = pdf.fix_text(file, self.lang)
-                  text2, line2 = pdf.fix_text(i, self.lang)
+                  text1, line1 = pdf.fix_text(file)
+                  text2, line2 = pdf.fix_text(i)
 
               else :
                   print "This language is not supported."

@@ -34,7 +34,7 @@ extract = false
 # used. Else regex will be used but the file will be considered belong to this
 # langauge familty.
 language = vhdl
-regex = \w+.*.(vhd|vhdl)$
+regex = ^((?!Datapath).)*\.(vhd|vhdl)$
 ignore_regex = Madhav\s+Desai
 # Whether you want to compile the programs. Need to write extensive code for
 # this.
