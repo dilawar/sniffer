@@ -171,6 +171,7 @@ class CompareProgram():
 
     def init_db(self):
       print("[I] Initializing database")
+      #self.db = sql.connect(":memory:")
       self.db = sql.connect(self.src_path+"/stats/log.sqlite")
       self.c = self.db.cursor()
       query = '''CREATE TABLE IF NOT EXISTS match (
@@ -181,6 +182,7 @@ class CompareProgram():
         , sizeB INT NOT NULL
         , match REAL DEFAULT '0.0'
         , severity TEXT 
+        , algorith TEXT
         , PRIMARY KEY (fileA, fileB))'''
       self.c.execute(query)
       self.db.commit()
