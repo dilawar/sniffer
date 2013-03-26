@@ -21,7 +21,7 @@ from lang_ctype import Ctype
 from lang_pdf import Pdf
  
 class CompareProgram():
-    def __init__(self, lang, regex):
+    def __init__(self, lang, regex, grep):
         self.src_path = '.'
         self.log_dir = self.src_path+"/stats/"
         self.allfiles = []
@@ -37,6 +37,7 @@ class CompareProgram():
         self.log_list_pkl = self.src_path+"/log_list.pkl"
         self.log_list = []
         self.is_log = True
+        self.ingnore_grep = grep
 
     
     def get_log_list(self):
@@ -122,9 +123,21 @@ class CompareProgram():
             if re.search(self.regex, file):
               path = dirpath+"/"+file
               size = os.path.getsize(path)
-              if size > 20 :
-                self.allfiles.append(path)
-                count = count + 1
+              # Check if given grep exists in the file.
+              if self.ingnore_grep == "" :
+                if size > 20 :
+                  self.allfiles.append(path)
+                  count = count + 1
+              else :
+                # check if this file contains the word.
+                pat = re.compile(self.regex, re.DOTALL)
+                txt = open(path, "r").read()
+                if pat.search(txt) :
+                  print("[I] This file {0} contains given regex. Ignoring ..".format(path))
+                else :
+                  if size > 20 :
+                    self.allfiles.append(path)
+                    count += 1
 
         self.total_program = count
         print "Total {0} programs".format(self.total_program)

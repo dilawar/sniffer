@@ -56,6 +56,7 @@ class IitbMoodle():
         self.compare = 'false'
         self.download = 'true'
         self.autotest = 'false'
+        self.ingnore_grep = ''
         self.cxx = ''
         home = os.environ['HOME']
         path = home+"/.moodlerc"
@@ -91,6 +92,10 @@ class IitbMoodle():
                 elif key.split()[0] == 'course' :
                     val = ' '.join(val.split())
                     self.course_key = val
+                
+                elif key.split()[0] == 'ignore_regex' :
+                    val = ' '.join(val.split())
+                    self.ignore_regex = val
 
                 elif key.split()[0] == 'autotest' :
                     val = ' '.join(val.split())
