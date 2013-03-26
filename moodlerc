@@ -11,7 +11,7 @@
 #
 url = http://moodle.iitb.ac.in/login/index.php
 username = dilawars
-password = lala
+password = alal
 proxy = false
 course = EE 677
 ## Acitivities are to be specified by dates.
@@ -28,13 +28,14 @@ activity = Submissions
 #activity = VHDL _ Late submissions
 download = fasle
 # It must end with / character.
-downloaddir = /home/dilawar/Works/hpc21/2013ee668/Assignments/A1/
+downloaddir = /home/dilawar/Works/hpc21/2013ee668/Assignments/A4/
 extract = false
 # Specify the language. If regex in the next line is empty then default regex is
 # used. Else regex will be used but the file will be considered belong to this
 # langauge familty.
-language = txt
-regex = \w+.*.dat[~]?$
+language = ctype
+regex = \w+.*.(vhd|vhdl)$
+ignore_regex = Madhav\s+Desai
 # Whether you want to compile the programs. Need to write extensive code for
 # this.
 compile = false

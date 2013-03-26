@@ -21,7 +21,7 @@ from lang_ctype import Ctype
 from lang_pdf import Pdf
  
 class CompareProgram():
-    def __init__(self, lang, regex, grep):
+    def __init__(self, lang, regex, ignore_regex):
         self.src_path = '.'
         self.log_dir = self.src_path+"/stats/"
         self.allfiles = []
@@ -37,13 +37,11 @@ class CompareProgram():
         self.log_list_pkl = self.src_path+"/log_list.pkl"
         self.log_list = []
         self.is_log = True
-        self.ingnore_grep = grep
+        self.ignore_regex = ignore_regex
 
     
     def get_log_list(self):
-
         return self.log_list
-    
     
     def set_dir_path(self, dir, delFlag):
         
@@ -100,7 +98,11 @@ class CompareProgram():
 
     def get_all_programs(self) :
         count = 0;
-        print "Searching {0} for programs\n".format(self.src_path)
+        print("Searching {0} for programs\n".format(self.src_path))
+        # check if this file contains the word.
+        print(" + Ignoring files with regex {0}".format(self.ignore_regex))
+        pat = re.compile(self.ignore_regex, re.DOTALL)
+        
         for dirpath, dirnames, filenames in os.walk(self.src_path) :
           for file in filenames :
             if self.lang == 'vhdl' :
@@ -124,17 +126,18 @@ class CompareProgram():
               path = dirpath+"/"+file
               size = os.path.getsize(path)
               # Check if given grep exists in the file.
-              if self.ingnore_grep == "" :
+              if len(self.ignore_regex.strip()) < 1 :
                 if size > 20 :
                   self.allfiles.append(path)
                   count = count + 1
               else :
-                # check if this file contains the word.
-                pat = re.compile(self.regex, re.DOTALL)
-                txt = open(path, "r").read()
-                if pat.search(txt) :
+                with open(path, "r") as f :
+                  txt = f.read()
+                m = pat.search(txt) 
+                if m :
                   print("[I] This file {0} contains given regex. Ignoring ..".format(path))
                 else :
+                  #print("[I] This file {0} does not containt regex".format(path))
                   if size > 20 :
                     self.allfiles.append(path)
                     count += 1

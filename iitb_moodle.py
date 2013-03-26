@@ -56,7 +56,7 @@ class IitbMoodle():
         self.compare = 'false'
         self.download = 'true'
         self.autotest = 'false'
-        self.ingnore_grep = ''
+        self.ignore_regex = ''
         self.cxx = ''
         home = os.environ['HOME']
         path = home+"/.moodlerc"
