@@ -243,7 +243,7 @@ ARCHITECTURE stimulus OF testbench IS\n\tCOMPONENT ''')
             print file.name
 
     # Fix vhdl input file to remove comments as well as keywords etc.
-    def fix_text(self, text, lang) :
+    def fix_text(self, text) :
       processed_text = text
       processed_text = re.sub(r"(\ )*\-\-[^\n]*\n", "", processed_text)
       return processed_text, processed_text.count("\n")
