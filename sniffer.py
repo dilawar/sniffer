@@ -1,8 +1,9 @@
 #!/usr/bin/env python2.7
 import re
-import os 
+import os, sys
 import argparse 
 from database import buildListingDb
+from compare import findListingsToCompare
 
 if __name__ == "__main__" :
 
@@ -24,3 +25,5 @@ if __name__ == "__main__" :
   config = cfg.ConfigParser()
   config.read(configFile)
   db = buildListingDb(config) 
+  # This db builds the database where each file must be compared with some other
+  db = findListingsToCompare(config, db)

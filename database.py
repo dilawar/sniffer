@@ -4,7 +4,7 @@ import os, errno
 def buildListingDb(config) :
   dbPath = config.get('database', 'path')
   dbName = config.get('database', 'name')
-  
+  print("[I] Creating db in {0}".format(dbPath))
   try :
     os.makedirs(dbPath) 
   except OSError as exception :
@@ -23,6 +23,7 @@ def initializeDb(db) :
 
   query = ''' CREATE TABLE listings (
             name VARCHAR NOT NULL 
+            , owner VARCHAR 
             , root VARCHAR NOT NULL 
             , type VARCHAR
             , size INT NOT NULL 
@@ -66,9 +67,12 @@ def populateDB(config, db) :
               exists".format(filePath))
           return 
         sizeOfFile = os.path.getsize(filePath)
-        query = '''INSERT INTO listings (name, root, size, type)
-            VALUES (?, ?, ?, ?)'''
-        c.execute(query, (fileName, root, sizeOfFile, regex))
+        owner = root.replace(dir, "")
+        owner = owner.strip("/")
+        owner = owner.split("/")[0]
+        query = '''INSERT INTO listings (name, root, size, type, owner)
+            VALUES (?, ?, ?, ?, ?)'''
+        c.execute(query, (fileName, root, sizeOfFile, regex, owner))
   db.commit()
   print("[I] Total {0} programs".format(countFile))
   return db 
