@@ -246,7 +246,7 @@ ARCHITECTURE stimulus OF testbench IS\n\tCOMPONENT ''')
     def fix_text(self, text, lang) :
       processed_text = text
       processed_text = re.sub(r"(\ )*\-\-[^\n]*\n", "", processed_text)
-      words = re.sub(r"[^\w]+", " ", processed_text)
-      return processed_text, processed_text.count("\n"), len(words.split())
+      return processed_text, processed_text.count("\n")
+
 
 
