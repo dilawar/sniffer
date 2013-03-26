@@ -204,7 +204,7 @@ class CompareProgram():
             lenTextA = len(textA)
             lenTextB = len(textB)
 
-            if float(lenTextA)/lenTextB > 0.2 or lenTextA/lenTextB  < 50 :
+            if float(lenTextA)/lenTextB > 0.2 or lenTextA/lenTextB  < 5 :
               if self.lang == 'vhdl' :
                   vhdl = VHDL()
                   text1, line1, word_count1 = vhdl.fix_text(textA, self.lang)
@@ -276,8 +276,6 @@ class CompareProgram():
                 else : 
                   self.c.execute(queryRation, ("noise", f1.name,
                     f2.name))
-
-                self.db.commit()
               # Handle small files. Divide s.ratio() by a suitable number.
               else :
                   a = [30,50,100,150,200,250,300]
@@ -312,7 +310,7 @@ class CompareProgram():
                     self.c.execute(queryRation, ("identical", f1.name, f2.name))
                   else :
                     self.c.execute(queryRation, ("identical", f1.name, f2.name))
-                  self.db.commit()
+      self.db.commit()
 
     def traverse_and_compare(self):
         ''' Take a file and compare it with all other files which have not been
