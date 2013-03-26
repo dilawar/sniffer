@@ -33,7 +33,7 @@ extract = false
 # Specify the language. If regex in the next line is empty then default regex is
 # used. Else regex will be used but the file will be considered belong to this
 # langauge familty.
-language = ctype
+language = vhdl
 regex = \w+.*.(vhd|vhdl)$
 ignore_regex = Madhav\s+Desai
 # Whether you want to compile the programs. Need to write extensive code for

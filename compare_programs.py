@@ -171,7 +171,8 @@ class CompareProgram():
 
     def init_db(self):
       print("[I] Initializing database")
-      self.db = sql.connect(self.src_path+"/stats/log.sqlite")
+      self.db = sql.connet(":memory:")
+      #self.db = sql.connect(self.src_path+"/stats/log.sqlite")
       self.c = self.db.cursor()
       query = '''CREATE TABLE IF NOT EXISTS match (
         userA TEXT NOT NULL 
