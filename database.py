@@ -33,7 +33,9 @@ def initializeDb(db) :
   c.execute(query)
 
   query = '''CREATE TABLE IF NOT EXISTS match (
-            fileA VARCHAR NOT NULL
+            userA VARCHAR NOT NULL 
+            , fileA VARCHAR NOT NULL
+            , userB VARCHAR NOT NULL
             , fileB VARCHAR NOT NULL 
             , match REAL NOT NULL 
             , algorithm VARCHAR 
@@ -77,3 +79,6 @@ def populateDB(config, db) :
   db.commit()
   print("[I] Total {0} programs".format(countFile))
   return db 
+
+def matchContent(config, db) :
+  pass 

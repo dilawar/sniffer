@@ -54,16 +54,17 @@ def compare(config, db) :
   tempListings = listings.copy()
 
   query = '''REPLACE INTO match 
-      (fileA, fileB, match, algorithm, result) VALUES 
-      (?, ?, ?, ?, ?)'''
+      (userA, fileA, userB, fileB, match, algorithm, result) 
+      VALUES 
+      (?, ?, ?, ?, ?, ?, ?)'''
   c = db.cursor()
   # for each user.
   i = 0
   totalUsers = len(listings)
   for userA in listings :
     i += 1
+    print("\n\n== Comparing for userA : {0}".format(userA[0]))
     print("[I] Processing {0} out of {1}".format(i, totalUsers))
-    print("Comparing for userA : {0}".format(userA))
     userComparisons = 0
     filesA = listings[userA]
     if len(filesA) == 0 :
@@ -83,15 +84,27 @@ def compare(config, db) :
         for fileB in filesB :
           nameB, rootB, sizeB = fileB
           # compare files here.
-          msg = "{0}/{1} : ".format(i, totalUsers)
+          msg = " # Processing user no {0} out of total {1} ".format(i, totalUsers)
           res, ratio = compareTwoFiles(config, db, userA, fileA, userB, fileB, msg)
-          if res == "difflib" or res == "custom" :
+          if res == "difflib" :
+            result = ""
             if ratio > 0.3 :
+              if ratio > 0.35 :
+                result = "mild"
+              elif ratio > 0.45 :
+                result = "moderate"
+              elif ratio > 0.55 :
+                result = "high" 
+              elif ratio > 0.65 :
+                result = "veryhigh" 
+              elif ratio > 0.80 :
+                result = "identical"
               filePathA = os.path.join(rootA, nameA)
               filePathB = os.path.join(rootB, nameB)
-              print("\n[Match] : {2}\n\t|- {0} <--> {1}".format(userA[0]+" : "+nameA,
-                userB[0]+" : "+nameB , ratio))
-              c.execute(query, (filePathA, filePathB, ratio, res, ratio))
+              print("\n[Match] : {2} {3} \n\t|- {0} <--> {1}".format(userA[0]+" : "+nameA,
+                userB[0]+" : "+nameB , ratio, msg))
+              c.execute(query, (userA[0], filePathA, userB[0], filePathB, ratio,
+                res, result))
           userComparisons += 1
     totalComparisions += userComparisons 
     print("[II] For user {0} : {1} comparisions".format(userA[0], userComparisons))
