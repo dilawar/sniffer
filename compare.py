@@ -73,7 +73,7 @@ def compare(config, db) :
     oldLength = sum([len(x) for x in tempListings.values()])
     tempListings.pop(userA, None)
     newLength = sum([len(x) for x in tempListings.values()])
-    print oldLength, newLength, len(filesA)
+    #print oldLength, newLength, len(filesA)
     assert oldLength == newLength + len(filesA), "More values are deleted"
 
     # compare each of his files with all other files.
@@ -91,13 +91,13 @@ def compare(config, db) :
             if ratio > 0.3 :
               if ratio > 0.35 :
                 result = "mild"
-              elif ratio > 0.45 :
+              if ratio > 0.45 :
                 result = "moderate"
-              elif ratio > 0.55 :
+              if ratio > 0.55 :
                 result = "high" 
-              elif ratio > 0.65 :
+              if ratio > 0.65 :
                 result = "veryhigh" 
-              elif ratio > 0.80 :
+              if ratio > 0.80 :
                 result = "identical"
               filePathA = os.path.join(rootA, nameA)
               filePathB = os.path.join(rootB, nameB)
@@ -110,7 +110,6 @@ def compare(config, db) :
     print("[II] For user {0} : {1} comparisions".format(userA[0], userComparisons))
     db.commit()
   print("[I] Total {0} comparisions".format(totalComparisions))
-
 
 def compareTwoFiles(config, db, userA, fileA, userB, fileB, msg) :
   textA = getText(fileA)

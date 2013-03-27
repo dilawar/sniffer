@@ -25,6 +25,7 @@ if __name__ == "__main__" :
   config = cfg.ConfigParser()
   config.read(configFile)
   db = database.buildListingDb(config) 
-  # Compare files.
-  compare.compare(config, db)
-  database.writeContent(config, db)
+  if config.get("source", "compare") == "true" :
+    compare.compare(config, db)
+  if config.get("source", "analyze_result") == "true" :
+    database.writeContent(config, db)

@@ -84,3 +84,11 @@ def writeContent(config, db) :
   path = config.get('database', 'path')
   name = config.get('database', 'name')
   dbPath = os.path.join(path, name)
+  db = sql.connect(dbPath)
+  c = db.cursor()
+  serverity = ["mild", "moderate", "high", "veryhigh", "identical"]
+  for s in serverity :
+    print("Fetching cases with serverity : {0}".format(s))
+    query = '''SELECT fileA, fileB, match FROM match WHERE result=?'''
+    for row in c.execute(query, (s,)) :
+      print row
