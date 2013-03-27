@@ -1,6 +1,7 @@
 import sqlite3 as sql 
 import re
 import os
+import algorithm
 
 def findListingsToCompare(config, db) :
   listings = dict()
@@ -53,7 +54,10 @@ def compare(config, db) :
   tempListings = listings.copy()
 
   # for each user.
+  i = 0
+  totalUsers = len(listings)
   for userA in listings :
+    i += 1
     print("Comparing for userA : {0}".format(userA))
     userComparisons = 0
     filesA = listings[userA]
@@ -74,14 +78,26 @@ def compare(config, db) :
         for fileB in filesB :
           nameB, rootB, sizeB = fileB
           # compare files here.
-          compareTwoFiles(config, db, userA, fileA, userB, fileB)
+          msg = "{0}/{1} : ".format(i, totalUsers)
+          compareTwoFiles(config, db, userA, fileA, userB, fileB, msg)
           userComparisons += 1
     totalComparisions += userComparisons 
     print("[II] For user {0} : {1} comparisions".format(userA[0], userComparisons))
   print("[I] Total {0} comparisions".format(totalComparisions))
 
 
-def compareTwoFiles(config, db, userA, fileA, userB, fileB) :
-  nameA, rootA, sizeA = fileA 
-  nameB, rootB, sizeB = fileB 
-  print("Comparing {0} : {1}".format(userA, userB))
+def compareTwoFiles(config, db, userA, fileA, userB, fileB, msg) :
+  textA = getText(fileA)
+  textB = getText(fileB)
+  language = config.get('source', 'language')
+  textA = algorithm.formatText(textA, language)
+  textB = algorithm.formatText(textB, language)
+  result, ratio = algorithm.compareAndReturnResult(textA, textB, algorithm="subsequence")
+  print(msg+" Comparing {0} : {1} {2}".format(fileA[0], fileB[0], ratio))
+
+def getText(file) :
+  name, root, size = file 
+  filePath = os.path.join(root, name)
+  with open(filePath, "r") as f :
+    txt = f.read()
+  return txt
