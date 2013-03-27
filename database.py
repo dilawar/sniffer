@@ -10,7 +10,11 @@ def buildListingDb(config) :
   except OSError as exception :
     if exception.errno != errno.EEXIST :
       raise 
-  db = sql.connect(os.path.join(dbPath, dbName))
+  if dbPath != ":memory:" :
+    db = sql.connect(os.path.join(dbPath, dbName))
+  else :
+    db = sql.connect(dbPath)
+
   db = initializeDb(db)
   db = populateDB(config, db)
   return db
@@ -84,6 +88,7 @@ def writeContent(config, db) :
   path = config.get('database', 'path')
   name = config.get('database', 'name')
   dbPath = os.path.join(path, name)
+  if path == ":memory:" : dbPath = path 
   db = sql.connect(dbPath)
   c = db.cursor()
   serverity = ["mild", "moderate", "high", "veryhigh", "identical"]
