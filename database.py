@@ -13,7 +13,7 @@ def buildListingDb(config) :
   if dbName != ":memory:" :
     db = sql.connect(os.path.join(dbPath, dbName))
   else :
-    db = sql.connect(dbPath)
+    db = sql.connect(dbName)
 
   db = initializeDb(db)
   db = populateDB(config, db)
