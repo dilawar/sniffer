@@ -58,6 +58,7 @@ def compare(config, db) :
   totalUsers = len(listings)
   for userA in listings :
     i += 1
+    print("[I] Processing {0} out of {1}".format(i, totalUsers))
     print("Comparing for userA : {0}".format(userA))
     userComparisons = 0
     filesA = listings[userA]
@@ -79,7 +80,11 @@ def compare(config, db) :
           nameB, rootB, sizeB = fileB
           # compare files here.
           msg = "{0}/{1} : ".format(i, totalUsers)
-          compareTwoFiles(config, db, userA, fileA, userB, fileB, msg)
+          res, ratio = compareTwoFiles(config, db, userA, fileA, userB, fileB, msg)
+          if res == "difflib" or res == "custom" :
+            if ratio > 0.3 :
+              print("\n[Match] : {2}\n\t|- {0} <--> {1}".format(userA[0]+" : "+nameA,
+                userB[0]+" : "+nameB , ratio))
           userComparisons += 1
     totalComparisions += userComparisons 
     print("[II] For user {0} : {1} comparisions".format(userA[0], userComparisons))
@@ -92,8 +97,7 @@ def compareTwoFiles(config, db, userA, fileA, userB, fileB, msg) :
   language = config.get('source', 'language')
   textA = algorithm.formatText(textA, language)
   textB = algorithm.formatText(textB, language)
-  result, ratio = algorithm.compareAndReturnResult(textA, textB, algorithm="subsequence")
-  print(msg+" Comparing {0} : {1} {2}".format(fileA[0], fileB[0], ratio))
+  return algorithm.compareAndReturnResult(textA, textB, algorithm="subsequence")
 
 def getText(file) :
   name, root, size = file 
