@@ -53,6 +53,10 @@ def compare(config, db) :
   # Make a copy for local modification.
   tempListings = listings.copy()
 
+  query = '''REPLACE INTO match 
+      (fileA, fileB, match, algorithm, result) VALUES 
+      (?, ?, ?, ?, ?)'''
+  c = db.cursor()
   # for each user.
   i = 0
   totalUsers = len(listings)
@@ -83,11 +87,15 @@ def compare(config, db) :
           res, ratio = compareTwoFiles(config, db, userA, fileA, userB, fileB, msg)
           if res == "difflib" or res == "custom" :
             if ratio > 0.3 :
+              filePathA = os.path.join(rootA, nameA)
+              filePathB = os.path.join(rootB, nameB)
               print("\n[Match] : {2}\n\t|- {0} <--> {1}".format(userA[0]+" : "+nameA,
                 userB[0]+" : "+nameB , ratio))
+              c.execute(query, (filePathA, filePathB, ratio, res, ratio))
           userComparisons += 1
     totalComparisions += userComparisons 
     print("[II] For user {0} : {1} comparisions".format(userA[0], userComparisons))
+    db.commit()
   print("[I] Total {0} comparisions".format(totalComparisions))
 
 
