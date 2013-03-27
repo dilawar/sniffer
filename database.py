@@ -36,7 +36,8 @@ def initializeDb(db) :
             fileA VARCHAR NOT NULL
             , fileB VARCHAR NOT NULL 
             , match REAL NOT NULL 
-            , algorithm VARCHAR NOT NULL
+            , algorithm VARCHAR 
+            , result VARCHAR
             , PRIMARY KEY(fileA, fileB, algorithm))
             '''
   c.execute(query)

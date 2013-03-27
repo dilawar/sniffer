@@ -8,7 +8,7 @@ compiler = ghdl
 [filter]
 ignore_regex = Madhav\s+Desai
 # larger size will be ignored. -1 for all. In Kb
-max_size = 100
+max_size = -1
 autotest = false
 
 [database]

@@ -5,13 +5,13 @@ import os
 def findListingsToCompare(config, db) :
   listings = dict()
   c = db.cursor()
-  query = '''SELECT DISTINCT owner FROM listings'''
+  query = '''SELECT DISTINCT owner FROM listings '''
   users = c.execute(query).fetchall()
   print("[I] Total {0} distint owner of files ".format(len(users)))
   # Now for each of these students fetch their files.
   for user in users :
     query = '''SELECT name, root, size FROM listings WHERE owner=? 
-              ORDER BY owner DESC '''
+              ORDER BY name DESC '''
     files = c.execute(query, (user)).fetchall()
     listings[user] = files 
   newListings = filterListing(config, listings)
@@ -47,4 +47,41 @@ def filterListing(config, listings) :
 
 
 def compare(config, db) :
+  totalComparisions = 0
   listings = findListingsToCompare(config, db)
+  # Make a copy for local modification.
+  tempListings = listings.copy()
+
+  # for each user.
+  for userA in listings :
+    print("Comparing for userA : {0}".format(userA))
+    userComparisons = 0
+    filesA = listings[userA]
+    if len(filesA) == 0 :
+      print("[W] No files for user")
+    # Delete this user from dictionary
+    oldLength = sum([len(x) for x in tempListings.values()])
+    tempListings.pop(userA, None)
+    newLength = sum([len(x) for x in tempListings.values()])
+    print oldLength, newLength, len(filesA)
+    assert oldLength == newLength + len(filesA), "More values are deleted"
+
+    # compare each of his files with all other files.
+    for fileA in filesA :
+      nameA, rootA, sizeA = fileA
+      for userB in tempListings :
+        filesB = tempListings[userB]
+        for fileB in filesB :
+          nameB, rootB, sizeB = fileB
+          # compare files here.
+          compareTwoFiles(config, db, userA, fileA, userB, fileB)
+          userComparisons += 1
+    totalComparisions += userComparisons 
+    print("[II] For user {0} : {1} comparisions".format(userA[0], userComparisons))
+  print("[I] Total {0} comparisions".format(totalComparisions))
+
+
+def compareTwoFiles(config, db, userA, fileA, userB, fileB) :
+  nameA, rootA, sizeA = fileA 
+  nameB, rootB, sizeB = fileB 
+  print("Comparing {0} : {1}".format(userA, userB))
