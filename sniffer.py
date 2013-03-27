@@ -27,4 +27,4 @@ if __name__ == "__main__" :
   db = database.buildListingDb(config) 
   # Compare files.
   compare.compare(config, db)
-  database.matchContent(config, db)
+  database.writeContent(config, db)

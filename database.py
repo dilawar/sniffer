@@ -80,5 +80,7 @@ def populateDB(config, db) :
   print("[I] Total {0} programs".format(countFile))
   return db 
 
-def matchContent(config, db) :
-  pass 
+def writeContent(config, db) :
+  path = config.get('database', 'path')
+  name = config.get('database', 'name')
+  dbPath = os.path.join(path, name)
