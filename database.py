@@ -47,6 +47,15 @@ def initializeDb(db) :
             , PRIMARY KEY(fileA, fileB, algorithm))
             '''
   c.execute(query)
+
+  c.execute('DROP TABLE IF EXISTS comparisons')
+  query = '''CREATE TABLE IF NOT EXISTS comparisons (
+    userA VARCHAR NOT NULL
+    , userB VARCHAR NOT NULL 
+    , file VARCHAR NOT NULL 
+    , severity VARCHAR NOT NULL) '''
+  c.execute(query)
+
   db.commit()
   return db
 
@@ -88,15 +97,21 @@ def writeContent(config, db) :
   path = config.get('database', 'path')
   name = config.get('database', 'name')
   dbPath = os.path.join(path, name)
-  if name == ":memory:" : dbPath = path 
+  if name == ":memory:" : 
+    print("[I] Loading db from memory dump ")
+    dbPath = os.path.join(path, "sniffer.sqlite3")
+    db = sqlite.connect("")
+    db.execute('.read {0}'.format(dbPath))
+
   db = sql.connect(dbPath)
   c = db.cursor()
   serverity = ["mild", "moderate", "high", "veryhigh", "identical"]
   for s in serverity :
     print("Fetching cases with serverity : {0}".format(s))
-    query = '''SELECT fileA, fileB, match FROM match WHERE result=?'''
+    query = '''SELECT userA, userB, fileA, fileB, match FROM match WHERE result=?'''
     for row in c.execute(query, (s,)) :
-      print row
+      userA, userB, fileA, fileB, match = row 
+
 
 def dump(config, db) :
   path = config.get('database', 'path')
