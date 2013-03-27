@@ -10,7 +10,7 @@ def buildListingDb(config) :
   except OSError as exception :
     if exception.errno != errno.EEXIST :
       raise 
-  if dbPath != ":memory:" :
+  if dbName != ":memory:" :
     db = sql.connect(os.path.join(dbPath, dbName))
   else :
     db = sql.connect(dbPath)
@@ -88,7 +88,7 @@ def writeContent(config, db) :
   path = config.get('database', 'path')
   name = config.get('database', 'name')
   dbPath = os.path.join(path, name)
-  if path == ":memory:" : dbPath = path 
+  if name == ":memory:" : dbPath = path 
   db = sql.connect(dbPath)
   c = db.cursor()
   serverity = ["mild", "moderate", "high", "veryhigh", "identical"]
@@ -97,3 +97,17 @@ def writeContent(config, db) :
     query = '''SELECT fileA, fileB, match FROM match WHERE result=?'''
     for row in c.execute(query, (s,)) :
       print row
+
+def dump(config, db) :
+  path = config.get('database', 'path')
+  name = config.get('database', 'name')
+  if name == ":memory:" :
+    print("[I] Dumping the in memory database to a file : {0}".format(fileToDump))
+    # dump it 
+    fileToDump = os.path.join(path, "sniffer.sqlite3")
+    with open(fileToDump, 'w') as f :
+      for line in db.iterdump() :
+        f.write('%s\n' % line)
+  else : return 
+
+

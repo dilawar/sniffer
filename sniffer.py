@@ -27,5 +27,6 @@ if __name__ == "__main__" :
   db = database.buildListingDb(config) 
   if config.get("source", "compare") == "true" :
     compare.compare(config, db)
+    database.dump(config, db)
   if config.get("source", "analyze_result") == "true" :
     database.writeContent(config, db)
