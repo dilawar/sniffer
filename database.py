@@ -115,13 +115,13 @@ def writeContent(config, db) :
     print("Fetching cases with serverity : {0}".format(s))
     query = '''SELECT userA, userB, fileA, fileB, match FROM match WHERE result=?'''
     with open(os.path.join(path, s+"_serverity.csv"), "w") as f :
-      for row in c.execute(query, (s,)) :
+      rows = c.execute(query, (s,)).fetchall()
+      for row in rows :
         userA, userB, fileA, fileB, match = row 
         fileA = fileA.replace(srcdir, "").strip("/")
         fileB = fileB.replace(srcdir, "").strip("/")
         f.write("\"{0}\",\"{1}\",\"{2}\"\n".format(match,fileA, fileB))
-
-
+  generateSummary(config, db)
 
 def dump(config, db) :
   path = config.get('database', 'path')
@@ -136,7 +136,8 @@ def dump(config, db) :
   else : return 
 
 
-def generateVisual(config, db) :  
+
+def generateSummary(config, db) :
   c = db.cursor()
   query = '''SELECT DISTINCT userA FROM match'''
   print("[DB] Fetching distinct first users ..."),
@@ -152,22 +153,46 @@ def generateVisual(config, db) :
   query = '''SELECT fileA, fileB, match FROM match WHERE userA=? AND
       userB=?'''
   nodes = list()
+  summary = dict()
   for userA in userAs :
     userA = userA[0]
     for userB in userBs :
       userB = userB[0]
-      for row in  c.execute(query, (userA, userB,)) :
+      num_matches = 0
+      avg_index = 0.0
+      rows = c.execute(query, (userA, userB,)).fetchall()
+      for row in rows :
         fileA, fileB, match = row 
-        c.execute('''INSERT OR IGNORE INTO summary (userA, userB) VALUES (?,
-            ?)''', (userA, userB,))
-        c.execute('''UPDATE summary SET num_matches = num_matches + 1 WHERE 
-          userA=? AND userB=?''', (userA, userB,))
-        c.execute('''UPDATE summary SET avg_index = (? + num_matches *
-        avg_index) / (num_matches + 1) WHERE userA=? AND userB=?''', (match, userA,
-          userB,))
-        db.commit()
+        avg_index = (match + num_matches * avg_index) / (num_matches+1)
+        num_matches += 1
+      if num_matches > 0 :
+        summary[(userA, userB)] = (num_matches, avg_index)
   print("done")
-
+  # Here is summary.
+  for k in summary :
+    userA, userB = k 
+    num_matches, avg_index = summary[k]
+    c.execute('''INSERT OR IGNORE INTO summary (userA, userB, num_matches
+      , avg_index) VALUES (?, ?, ?, ?)''', (userA, userB, num_matches,
+        avg_index,))
+  db.commit()
 
   
 
+def generateVisual(config, db) : 
+  path = os.path.join(config.get('database', 'path'), "summary.dot")
+  print("Generating graphs from summary ..."),
+  c = db.cursor()
+  summary = c.execute('SELECT * FROM summary').fetchall()
+  with open(path, "w") as f :
+    f.write("graph summary { \n node[style=filled shape=point label= \"\"]; \n")
+    f.write("  overlap=false ;\n  spline=true; \n  nodesep=4.0;\n")
+    for s in summary :
+      userA, userB, num_matches, avg = s
+      userA = userA.replace(" ","_")
+      userA = userA.replace(".","")
+      userB = userB.replace(" ", "_")
+      userB = userB.replace(".", "")
+      f.write("  {0} -- {1} [penwidth={2} color=\"{2} 0 {2}\"];\
+          \n".format(userA, userB, avg))
+    f.write("\n}\n")
