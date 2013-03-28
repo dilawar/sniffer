@@ -4,7 +4,7 @@ dir = /home/dilawar/Works/hpc21/2013ee668/Assignments/A4/Submissions
 regex = .*(vhdl|vhd)$
 language = vhdl
 compiler = ghdl
-compare = true
+compare = false
 analyze_result = true 
 send_email = false
 
@@ -16,5 +16,6 @@ autotest = false
 
 [database]
 path = /home/dilawar/Works/hpc21/2013ee668/Assignments/A4/db/
-#name = sniffer.sqlite3 
-name = :memory:
+name = sniffer.sqlite3 
+
+#name = :memory:

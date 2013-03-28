@@ -95,6 +95,9 @@ def populateDB(config, db) :
 
 def writeContent(config, db) :
   path = config.get('database', 'path')
+  srcdir = config.get('source', 'dir')
+  srcdir = srcdir.strip("/")
+  srcdir += "/"
   name = config.get('database', 'name')
   dbPath = os.path.join(path, name)
   if name == ":memory:" : 
@@ -109,8 +112,12 @@ def writeContent(config, db) :
   for s in serverity :
     print("Fetching cases with serverity : {0}".format(s))
     query = '''SELECT userA, userB, fileA, fileB, match FROM match WHERE result=?'''
-    for row in c.execute(query, (s,)) :
-      userA, userB, fileA, fileB, match = row 
+    with open(os.path.join(path, s+"_serverity.csv"), "w") as f :
+      for row in c.execute(query, (s,)) :
+        userA, userB, fileA, fileB, match = row 
+        fileA = fileA.replace(srcdir, "").strip("/")
+        fileB = fileB.replace(srcdir, "").strip("/")
+        f.write("\"{0}\",\"{1}\",\"{2}\"\n".format(match,fileA, fileB))
 
 
 def dump(config, db) :
