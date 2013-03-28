@@ -1,4 +1,3 @@
-import pyPdf
 from pdfminer.pdfinterp import PDFResourceManager, process_pdf
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
@@ -38,18 +37,19 @@ class Pdf :
     retstr.close()
     return str, 50
 
-  def getPDFContent(self, path):
-      content = ""
-      # Load PDF into pyPDF
-      pdf = pyPdf.PdfFileReader(file(path, "rb"))
-      # Iterate pages
-      for i in range(0, pdf.getNumPages()):
-          # Extract text from page and add to content
-          content += pdf.getPage(i).extractText() + "\n"
-          # Collapse whitespace
-          content = " ".join(content.replace(u"\xa0", " ").strip().split())
-      return content
-
+#  def getPDFContent(self, path):
+#      import pyPdf
+#      content = ""
+#      # Load PDF into pyPDF
+#      pdf = pyPdf.PdfFileReader(file(path, "rb"))
+#      # Iterate pages
+#      for i in range(0, pdf.getNumPages()):
+#          # Extract text from page and add to content
+#          content += pdf.getPage(i).extractText() + "\n"
+#          # Collapse whitespace
+#          content = " ".join(content.replace(u"\xa0", " ").strip().split())
+#      return content
+#
   def fix_text(self, file, lang_type) :
     try :
       process_text = self.getPDFContent(file).encode("ascii", "ignore")
