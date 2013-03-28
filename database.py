@@ -133,3 +133,28 @@ def dump(config, db) :
   else : return 
 
 
+def generateVisual(config, db) :  
+  import networkx as nx
+  c = db.cursor()
+  query = '''SELECT DISTINCT userA FROM match'''
+  print("[DB] Fetching distinct first users ..."),
+  userAs = c.execute(query).fetchall()
+  print("done")
+  
+  print("[DB] Fetching distinct second users ..."),
+  query = '''SELECT DISTINCT userB FROM match'''
+  userBs = c.execute(query).fetchall()
+  print("done")
+
+  print("Generating information for each pair of students ... "),
+  query = '''SELECT fileA, fileB, match FROM match WHERE userA=? AND
+      userB=?'''
+  nodes = list()
+  for userA in userAs :
+    for userB in userBs :
+      res = c.execute(query, (userA[0], userB[0],)).fetchall()
+      nodes.append(res)
+  print("done")
+
+  
+
