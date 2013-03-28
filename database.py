@@ -185,19 +185,30 @@ def generateSummary(config, db) :
 def generateVisual(config, db) : 
   global inMemDb
   c = inMemDb.cursor()
-  path = os.path.join(config.get('database', 'path'), "summary.dot")
+  dbPath = config.get("database", "path")
+  path = os.path.join(dbPath, "summary.dot")
   print("Generating graphs from summary ..."),
   summary = c.execute('SELECT * FROM summary').fetchall()
   with open(path, "w") as f :
-    f.write("graph summary { \n node[style=filled shape=point label= \"\"]; \n")
-    f.write("  overlap=false ;\n  spline=true; \n  nodesep=4.0;\n")
-    for s in summary :
-      userA, userB, num_matches, avg = s
-      penwidth = avg*avg + 0.1
-      userA = userA.replace(" ","_")
-      userA = userA.replace(".","")
-      userB = userB.replace(" ", "_")
-      userB = userB.replace(".", "")
-      f.write("  {0} -- {1} [penwidth={2} color=\"{2} 1.0 {2}\"];\
-          \n".format(userA, userB, penwidth))
-    f.write("\n}\n")
+    with open(dbPath+"/high_match.dot", "w") as highF :
+      with open(dbPath+"/medium_match.dot", "w") as medF :
+        header = "# neato -Tpng thisfile > thisfile.png \n"
+        header += "graph match { \n\tnode[style=filled shape=point label= \"\"];"
+        header += "\n\toverlap=false ;\n\tspline=true; \n\tnodesep=4.0;"
+        f.write(header)
+        highF.write(header)
+        medF.write(header)
+        for s in summary :
+          userA, userB, num_matches, avg = s
+          penwidth = avg*avg + 0.1
+          line = "\n\t\"{0}\" -- \"{1}\" [penwidth={2} color=\"{2} 1.0 {2}\"];"\
+              .format(userA, userB, penwidth)
+          f.write(line)
+          if avg >= 0.65  :
+            highF.write(line)
+          if avg >= 0.50 :
+            medF.write(line)
+        endLine = "\n}\n"
+        f.write(endLine)
+        highF.write(endLine)
+        medF.write(endLine)
