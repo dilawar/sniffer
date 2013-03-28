@@ -48,12 +48,14 @@ def initializeDb(db) :
             '''
   c.execute(query)
 
-  c.execute('DROP TABLE IF EXISTS comparisons')
-  query = '''CREATE TABLE IF NOT EXISTS comparisons (
+  c.execute('DROP TABLE IF EXISTS summary')
+  query = '''CREATE TABLE IF NOT EXISTS summary (
     userA VARCHAR NOT NULL
     , userB VARCHAR NOT NULL 
-    , file VARCHAR NOT NULL 
-    , severity VARCHAR NOT NULL) '''
+    , num_matches INT default '1'
+    , avg_index REAL default '0.0'
+    , PRIMARY KEY(userA, userB) 
+    ) '''
   c.execute(query)
 
   db.commit()
@@ -95,6 +97,9 @@ def populateDB(config, db) :
 
 def writeContent(config, db) :
   path = config.get('database', 'path')
+  srcdir = config.get('source', 'dir')
+  srcdir = srcdir.strip("/")
+  srcdir += "/"
   name = config.get('database', 'name')
   dbPath = os.path.join(path, name)
   if name == ":memory:" : 
@@ -109,8 +114,12 @@ def writeContent(config, db) :
   for s in serverity :
     print("Fetching cases with serverity : {0}".format(s))
     query = '''SELECT userA, userB, fileA, fileB, match FROM match WHERE result=?'''
-    for row in c.execute(query, (s,)) :
-      userA, userB, fileA, fileB, match = row 
+    with open(os.path.join(path, s+"_serverity.csv"), "w") as f :
+      for row in c.execute(query, (s,)) :
+        userA, userB, fileA, fileB, match = row 
+        fileA = fileA.replace(srcdir, "").strip("/")
+        fileB = fileB.replace(srcdir, "").strip("/")
+        f.write("\"{0}\",\"{1}\",\"{2}\"\n".format(match,fileA, fileB))
 
 
 
@@ -126,4 +135,39 @@ def dump(config, db) :
         f.write('%s\n' % line)
   else : return 
 
+
+def generateVisual(config, db) :  
+  c = db.cursor()
+  query = '''SELECT DISTINCT userA FROM match'''
+  print("[DB] Fetching distinct first users ..."),
+  userAs = c.execute(query).fetchall()
+  print("done")
+  
+  print("[DB] Fetching distinct second users ..."),
+  query = '''SELECT DISTINCT userB FROM match'''
+  userBs = c.execute(query).fetchall()
+  print("done")
+
+  print("[DB] Populating table summary ... "),
+  query = '''SELECT fileA, fileB, match FROM match WHERE userA=? AND
+      userB=?'''
+  nodes = list()
+  for userA in userAs :
+    userA = userA[0]
+    for userB in userBs :
+      userB = userB[0]
+      for row in  c.execute(query, (userA, userB,)) :
+        fileA, fileB, match = row 
+        c.execute('''INSERT OR IGNORE INTO summary (userA, userB) VALUES (?,
+            ?)''', (userA, userB,))
+        c.execute('''UPDATE summary SET num_matches = num_matches + 1 WHERE 
+          userA=? AND userB=?''', (userA, userB,))
+        c.execute('''UPDATE summary SET avg_index = (? + num_matches *
+        avg_index) / (num_matches + 1) WHERE userA=? AND userB=?''', (match, userA,
+          userB,))
+        db.commit()
+  print("done")
+
+
+  
 
