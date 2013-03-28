@@ -4,12 +4,12 @@ dir = /home/dilawar/Works/hpc21/2013ee668/Assignments/A4/Submissions
 regex = .*(vhdl|vhd)$
 language = vhdl
 compiler = ghdl
-compare = false
+compare = true
 analyze_result = true 
 send_email = false
 
 [filter]
-ignore_regex = Madhav\s+Desai
+ignore_regex = ((Madhav\s+Desai)|(entity\s+(reg|unsigned\_(comparator|adder)|mux\dto\d|decoder\dto\d|Datapath)\s+is))
 # larger size will be ignored. -1 for all. In Kb
 max_size = -1
 autotest = false

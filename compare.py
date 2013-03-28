@@ -115,16 +115,20 @@ def compare(config, db) :
   print("[I] Total {0} comparisions".format(totalComparisions))
 
 def compareTwoFiles(config, db, userA, fileA, userB, fileB, msg) :
-  textA = getText(fileA)
-  textB = getText(fileB)
   language = config.get('source', 'language')
+  textA = getText(fileA, language)
+  textB = getText(fileB, language)
   textA = algorithm.formatText(textA, language)
   textB = algorithm.formatText(textB, language)
   return algorithm.compareAndReturnResult(textA, textB, algorithm="subsequence")
 
-def getText(file) :
+def getText(file, language) :
   name, root, size = file 
   filePath = os.path.join(root, name)
-  with open(filePath, "r") as f :
-    txt = f.read()
-  return txt
+  if language != "pdf" : 
+    with open(filePath, "r") as f :
+      txt = f.read()
+    return txt
+  else :
+    return filePath
+

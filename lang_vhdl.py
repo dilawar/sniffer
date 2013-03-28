@@ -253,7 +253,7 @@ ARCHITECTURE stimulus OF testbench IS\n\tCOMPONENT ''')
         else :
           foundFirstComment = False
           processed_text += (line+"\n")
-      return processed_text, processed_text.count("\n")
+      return processed_text 
 
 
 

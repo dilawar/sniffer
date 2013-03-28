@@ -3,7 +3,21 @@ import os, sys
 import difflib
 
 def formatText(txt, lang) :
-  return txt
+  if lang == "vhdl" :
+    import lang_vhdl as vhdl
+    obj = vhdl.VHDL()
+    return obj.fix_text(txt)
+  if lang == "verilog" :
+    import lang_verilog as verilog :
+    obj = verilog.Verilog()
+    return obj.fix_text(txt)
+  if lang == "pdf" :
+    import lang_pdf as pdf 
+    obj = pdf.Pdf()
+    return obj.fix_text(txt)
+  else :
+    print("[W] This language is not supported. Assuming text ...")
+    return txt
   
 def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
   if algorithm == "subsequence" :
