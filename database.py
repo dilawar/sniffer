@@ -113,6 +113,7 @@ def writeContent(config, db) :
       userA, userB, fileA, fileB, match = row 
 
 
+
 def dump(config, db) :
   path = config.get('database', 'path')
   name = config.get('database', 'name')
