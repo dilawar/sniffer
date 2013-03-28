@@ -48,12 +48,14 @@ def initializeDb(db) :
             '''
   c.execute(query)
 
-  c.execute('DROP TABLE IF EXISTS comparisons')
-  query = '''CREATE TABLE IF NOT EXISTS comparisons (
+  c.execute('DROP TABLE IF EXISTS summary')
+  query = '''CREATE TABLE IF NOT EXISTS summary (
     userA VARCHAR NOT NULL
     , userB VARCHAR NOT NULL 
-    , file VARCHAR NOT NULL 
-    , severity VARCHAR NOT NULL) '''
+    , num_matches INT default '1'
+    , avg_index REAL default '0.0'
+    , PRIMARY KEY(userA, userB) 
+    ) '''
   c.execute(query)
 
   db.commit()
@@ -134,7 +136,6 @@ def dump(config, db) :
 
 
 def generateVisual(config, db) :  
-  import networkx as nx
   c = db.cursor()
   query = '''SELECT DISTINCT userA FROM match'''
   print("[DB] Fetching distinct first users ..."),
@@ -146,15 +147,26 @@ def generateVisual(config, db) :
   userBs = c.execute(query).fetchall()
   print("done")
 
-  print("Generating information for each pair of students ... "),
+  print("[DB] Populating table summary ... "),
   query = '''SELECT fileA, fileB, match FROM match WHERE userA=? AND
       userB=?'''
   nodes = list()
   for userA in userAs :
+    userA = userA[0]
     for userB in userBs :
-      res = c.execute(query, (userA[0], userB[0],)).fetchall()
-      nodes.append(res)
+      userB = userB[0]
+      for row in  c.execute(query, (userA, userB,)) :
+        fileA, fileB, match = row 
+        c.execute('''INSERT OR IGNORE INTO summary (userA, userB) VALUES (?,
+            ?)''', (userA, userB,))
+        c.execute('''UPDATE summary SET num_matches = num_matches + 1 WHERE 
+          userA=? AND userB=?''', (userA, userB,))
+        c.execute('''UPDATE summary SET avg_index = (? + num_matches *
+        avg_index) / (num_matches + 1) WHERE userA=? AND userB=?''', (match, userA,
+          userB,))
+        db.commit()
   print("done")
+
 
   
 
