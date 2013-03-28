@@ -1,6 +1,8 @@
 import sqlite3 as sql 
 import os, errno
 
+inMemDb = sql.connect(":memory:")
+
 def buildListingDb(config) :
   dbPath = config.get('database', 'path')
   dbName = config.get('database', 'name')
@@ -49,6 +51,7 @@ def initializeDb(db) :
   c.execute(query)
 
   c.execute('DROP TABLE IF EXISTS summary')
+  
   query = '''CREATE TABLE IF NOT EXISTS summary (
     userA VARCHAR NOT NULL
     , userB VARCHAR NOT NULL 
@@ -57,7 +60,6 @@ def initializeDb(db) :
     , PRIMARY KEY(userA, userB) 
     ) '''
   c.execute(query)
-
   db.commit()
   return db
 
@@ -135,10 +137,13 @@ def dump(config, db) :
         f.write('%s\n' % line)
   else : return 
 
-
-
 def generateSummary(config, db) :
-  c = db.cursor()
+  global inMemDb
+  table_to_copy = "match" 
+  query = "".join(line for line in db.iterdump())
+  inMemDb.executescript(query)   # copies the table match.
+  c = inMemDb.cursor()
+  
   query = '''SELECT DISTINCT userA FROM match'''
   print("[DB] Fetching distinct first users ..."),
   userAs = c.execute(query).fetchall()
@@ -175,24 +180,24 @@ def generateSummary(config, db) :
     c.execute('''INSERT OR IGNORE INTO summary (userA, userB, num_matches
       , avg_index) VALUES (?, ?, ?, ?)''', (userA, userB, num_matches,
         avg_index,))
-  db.commit()
-
-  
+  inMemDb.commit()
 
 def generateVisual(config, db) : 
+  global inMemDb
+  c = inMemDb.cursor()
   path = os.path.join(config.get('database', 'path'), "summary.dot")
   print("Generating graphs from summary ..."),
-  c = db.cursor()
   summary = c.execute('SELECT * FROM summary').fetchall()
   with open(path, "w") as f :
     f.write("graph summary { \n node[style=filled shape=point label= \"\"]; \n")
     f.write("  overlap=false ;\n  spline=true; \n  nodesep=4.0;\n")
     for s in summary :
       userA, userB, num_matches, avg = s
+      penwidth = avg*avg + 0.1
       userA = userA.replace(" ","_")
       userA = userA.replace(".","")
       userB = userB.replace(" ", "_")
       userB = userB.replace(".", "")
-      f.write("  {0} -- {1} [penwidth={2} color=\"{2} 0 {2}\"];\
-          \n".format(userA, userB, avg))
+      f.write("  {0} -- {1} [penwidth={2} color=\"{2} 1.0 {2}\"];\
+          \n".format(userA, userB, penwidth))
     f.write("\n}\n")

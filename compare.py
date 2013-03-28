@@ -2,6 +2,7 @@ import sqlite3 as sql
 import re
 import os
 import algorithm
+import database
 
 def findListingsToCompare(config, db) :
   listings = dict()
@@ -48,6 +49,7 @@ def filterListing(config, listings) :
 
 
 def compare(config, db) :
+
   totalComparisions = 0
   listings = findListingsToCompare(config, db)
   # Make a copy for local modification.
@@ -58,6 +60,7 @@ def compare(config, db) :
       VALUES 
       (?, ?, ?, ?, ?, ?, ?)'''
   c = db.cursor()
+
   # for each user.
   i = 0
   totalUsers = len(listings)
