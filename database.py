@@ -241,9 +241,9 @@ def genrateDOT(config, db) :
         highF.write(endLine)
 
         endLine = "echo $graph > .temp.dot \n"
-        endLine += "neato -Tpng -o{0} .temp.dot \n"
+        endLine += "neato -Tps -o{0} .temp.dot \n"
         endLine += "rm -f .temp.dot\n"
 
-        f.write(endLine.format(summaryName+".png"))
-        highF.write(endLine.format(convictedName+".png"))
-        medF.write(endLine.format(accusedName+".png"))
+        f.write(endLine.format(summaryName+".ps"))
+        highF.write(endLine.format(convictedName+".ps"))
+        medF.write(endLine.format(accusedName+".ps"))
