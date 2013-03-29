@@ -29,7 +29,7 @@ def filterListing(config, listings) :
   else :
     max_size = max_size*1024
   regex = config.get('filter', 'ignore_regex')
-  pat = re.compile(regex)
+  pat = re.compile(regex, re.IGNORECASE | re.DOTALL)
   newListings = dict()
   for user in listings :
     newFiles = list()
@@ -41,7 +41,7 @@ def filterListing(config, listings) :
       with open(filePath, "r") as f :
         txt = f.read()
       if pat.search(txt) or size > max_size : 
-        continue 
+        print("[II] Ignore {0}.".format(name))
       else :
         newFiles.append(file)
     newListings[user] = newFiles
