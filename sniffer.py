@@ -30,4 +30,4 @@ if __name__ == "__main__" :
     database.dump(config, db)
   if config.get("source", "analyze_result") == "true" :
     database.writeContent(config, db)
-    database.generateVisual(config, db)
+    database.genrateDOT(config, db)

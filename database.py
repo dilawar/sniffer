@@ -7,6 +7,7 @@ inMemDb = sql.connect(":memory:")
 def buildListingDb(config) :
   dbPath = config.get('database', 'path')
   dbName = config.get('database', 'name')
+  iscomparing = config.get('source', 'compare')
   print("[I] Creating db in {0}".format(dbPath))
   try :
     os.makedirs(dbPath) 
@@ -16,8 +17,11 @@ def buildListingDb(config) :
   if dbName != ":memory:" :
     dbfile = os.path.join(dbPath, dbName)
     if os.path.exists(dbfile) :
-      os.rename(dbfile, dbfile+time.strftime("%Y%m%d%H%M%S"))
-    db = sql.connect(os.path.join(dbPath, dbName))
+      if iscomparing == "true" : 
+        os.rename(dbfile, dbfile+time.strftime("%Y%m%d%H%M%S"))
+      else :
+        pass 
+    db = sql.connect(dbfile)
   else :
     db = sql.connect(dbName)
 
@@ -142,11 +146,11 @@ def dump(config, db) :
   else : return 
 
 def generateSummary(config, db) :
-  global inMemDb
-  table_to_copy = "match" 
-  query = "".join(line for line in db.iterdump())
-  inMemDb.executescript(query)   # copies the table match.
-  c = inMemDb.cursor()
+  #global inMemDb
+  #table_to_copy = "match" 
+  #query = "".join(line for line in db.iterdump())
+  #inMemDb.executescript(query)   # copies the table match.
+  c = db.cursor()
   
   query = '''SELECT DISTINCT userA FROM match'''
   print("[DB] Fetching distinct first users ..."),
@@ -184,11 +188,11 @@ def generateSummary(config, db) :
     c.execute('''INSERT OR IGNORE INTO summary (userA, userB, num_matches
       , avg_index) VALUES (?, ?, ?, ?)''', (userA, userB, num_matches,
         avg_index,))
-  inMemDb.commit()
+  db.commit()
 
-def generateVisual(config, db) : 
-  global inMemDb
-  c = inMemDb.cursor()
+def genrateDOT(config, db) : 
+  #global inMemDb
+  c = db.cursor()
   dbPath = config.get("database", "path")
   path = os.path.join(dbPath, "summary.dot")
   print("Generating graphs from summary ..."),
@@ -198,15 +202,27 @@ def generateVisual(config, db) :
       with open(dbPath+"/medium_match.dot", "w") as medF :
         header = "# neato -Tpng thisfile > thisfile.png \n"
         header += "graph match { \n\tnode[style=filled shape=point label= \"\"];"
+        header += "\n\tsize=\"40.0,40.0\";"
+        header += "\n\tfontsize=10.0;";
         header += "\n\toverlap=false ;\n\tspline=true; \n\tnodesep=4.0;"
         f.write(header)
         highF.write(header)
         medF.write(header)
         for s in summary :
           userA, userB, num_matches, avg = s
-          penwidth = avg*avg + 0.1
-          line = "\n\t\"{0}\" -- \"{1}\" [penwidth={2} color=\"{2} 1.0 {2}\"];"\
-              .format(userA, userB, penwidth)
+          penwidth = (avg+0.5)*(avg+0.5)
+          if avg > 0.0 :
+            color = "#ffff00"
+          if avg > 0.5 :
+            color = "#ffa000" 
+          if avg > 0.6 :
+            color = "blue"
+          if avg > 0.7 :
+            color = "red"
+
+          line = ("\n\t\"{0}\" -- \"{1}\" [penwidth={2} color=\"{4}\""+
+                " label=\"{3}\" fontsize=7.0];").format(userA, userB, penwidth
+                    , num_matches, color)
           f.write(line)
           if avg >= 0.65  :
             highF.write(line)
