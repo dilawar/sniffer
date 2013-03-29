@@ -1,5 +1,6 @@
 import sqlite3 as sql 
 import os, errno
+import time
 
 inMemDb = sql.connect(":memory:")
 
@@ -13,6 +14,9 @@ def buildListingDb(config) :
     if exception.errno != errno.EEXIST :
       raise 
   if dbName != ":memory:" :
+    dbfile = os.path.join(dbPath, dbName)
+    if os.path.exists(dbfile) :
+      os.rename(dbfile, dbfile+time.strftime("%Y%m%d%H%M%S"))
     db = sql.connect(os.path.join(dbPath, dbName))
   else :
     db = sql.connect(dbName)
