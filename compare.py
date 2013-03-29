@@ -19,7 +19,7 @@ def findListingsToCompare(config, db) :
   newListings = filterListing(config, listings)
   oldNum = sum([len(i) for i in listings.itervalues()])
   newNum = sum([len(i) for i in newListings.itervalues()])
-  print("[I] Total {0} files filtered.".format(oldNum - newNum))
+  print("[FILTER] Total {0} files filtered.".format(oldNum - newNum))
   return newListings 
 
 def filterListing(config, listings) :
@@ -41,7 +41,7 @@ def filterListing(config, listings) :
       with open(filePath, "r") as f :
         txt = f.read()
       if pat.search(txt) or size > max_size : 
-        print("[II] Ignore {0}.".format(name))
+        print("[FILTER] Ignore {0}.".format(name))
       else :
         newFiles.append(file)
     newListings[user] = newFiles
