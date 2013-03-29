@@ -194,14 +194,19 @@ def genrateDOT(config, db) :
   #global inMemDb
   c = db.cursor()
   dbPath = config.get("database", "path")
-  path = os.path.join(dbPath, "summary.dot")
+  summaryName = "summary"
+  convictedName = "convicted"
+  accusedName = "accused"
+  path = os.path.join(dbPath, summaryName+".sh")
   print("Generating graphs from summary ..."),
   summary = c.execute('SELECT * FROM summary').fetchall()
   with open(path, "w") as f :
-    with open(dbPath+"/high_match.dot", "w") as highF :
-      with open(dbPath+"/medium_match.dot", "w") as medF :
-        header = "# neato -Tpng thisfile > thisfile.png \n"
-        header += "graph match { \n\tnode[style=filled shape=point label= \"\"];"
+    with open(dbPath+"/"+convictedName+".sh", "w") as highF :
+      with open(dbPath+"/"+accusedName+".sh", "w") as medF :
+        header = "#!/bin/bash\n"
+        header += "\n# Bash script to generate graph\n"
+        header += "\ngraph=$(cat <<GRAPHEND"
+        header += "\ngraph match { \n\tnode[style=filled shape=point label= \"\"];"
         header += "\n\tsize=\"40.0,40.0\";"
         header += "\n\tfontsize=10.0;";
         header += "\n\toverlap=false ;\n\tspline=true; \n\tnodesep=4.0;"
@@ -224,11 +229,21 @@ def genrateDOT(config, db) :
                 " label=\"{3}\" fontsize=7.0];").format(userA, userB, penwidth
                     , num_matches, color)
           f.write(line)
-          if avg >= 0.65  :
+          if avg >= 0.60  :
             highF.write(line)
-          if avg >= 0.50 :
+          if avg >= 0.45 :
             medF.write(line)
         endLine = "\n}\n"
+        endLine += "GRAPHEND\n"
+        endLine += ")\n"
         f.write(endLine)
-        highF.write(endLine)
         medF.write(endLine)
+        highF.write(endLine)
+
+        endLine = "echo $graph > .temp.dot \n"
+        endLine += "neato -Tpng -o{0} .temp.dot \n"
+        endLine += "rm -f .temp.dot\n"
+
+        f.write(endLine.format(summaryName+".png"))
+        highF.write(endLine.format(convictedName+".png"))
+        medF.write(endLine.format(accusedName+".png"))
