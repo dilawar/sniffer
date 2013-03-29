@@ -128,8 +128,8 @@ def writeContent(config, db) :
       rows = c.execute(query, (s,)).fetchall()
       for row in rows :
         userA, userB, fileA, fileB, match = row 
-        fileA = fileA.replace(srcdir, "").strip("/")
-        fileB = fileB.replace(srcdir, "").strip("/")
+        #fileA = fileA.replace(srcdir, "").strip("/")
+        #fileB = fileB.replace(srcdir, "").strip("/")
         f.write("\"{0}\",\"{1}\",\"{2}\"\n".format(match,fileA, fileB))
   generateSummary(config, db)
 
