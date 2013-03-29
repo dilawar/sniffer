@@ -8,7 +8,7 @@ def formatText(txt, lang) :
     obj = vhdl.VHDL()
     return obj.fix_text(txt)
   if lang == "verilog" :
-    import lang_verilog as verilog :
+    import lang_verilog as verilog 
     obj = verilog.Verilog()
     return obj.fix_text(txt)
   if lang == "pdf" :
