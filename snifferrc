@@ -5,12 +5,12 @@ regex = .*(vhdl|vhd)$
 language = vhdl
 compiler = ghdl
 # make compare true if you want to compare.
-compare = false
+compare = true
 analyze_result = true 
 send_email = false
 
 [filter]
-ignore_regex = ((Madhav\s+Desai)|(entity\s+(reg|unsigned\_(comparator|adder)|mux\dto\d|decoder\dto\d|Datapath)\s+is))
+ignore_regex = ((Madhav\s+Desai)|(entity\s+(reg|\w*mux\w*|unsigned\_(comparator|adder)|mux\dto\d|decoder\dto\d|Datapath)\s+is)|(operand1.+operand2.+result.+overflow)|(data\_in.+data\_out.+clock))
 # larger size will be ignored. -1 for all. In Kb
 max_size = -1
 autotest = false
