@@ -145,11 +145,12 @@ def compare(config, db) :
 
 def compareTwoFiles(config, db, userA, fileA, userB, fileB, msg) :
   language = config.get('source', 'language')
+  algorithm = config.get('algorithm', 'name')
   textA = getText(fileA, language)
   textB = getText(fileB, language)
   textA = algorithm.formatText(textA, language)
   textB = algorithm.formatText(textB, language)
-  return algorithm.compareAndReturnResult(textA, textB, algorithm="subsequence")
+  return algorithm.compareAndReturnResult(textA, textB, algorithm=algorithm)
 
 def getText(file, language) :
   name, root, size = file 

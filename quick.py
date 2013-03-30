@@ -43,14 +43,19 @@ def quickMatch(textA, textB) :
   i = 0
   while(textA.__len__() > maxlength) :
     length, index = subsequence(0, textA, textB)
+    if length > 1 :
+      textA = textA[length:]
     if length >  maxlength :
       maxlength = length
       print length, index
-      print("Text A: ",textA)
-      print("Text B: ",textB)
-      print("Match : ", textA[index[0]:index[0]+length])
+      #print("Text A: ",textA)
+      #print("Text B: ",textB)
+      matchTxt = textA[index[0]:index[0]+length]
+      print("[M] : ", matchTxt)
     currenIndex += length
-    #textB = textB[:index[1]] + textB[index[1]+length:]
+    if length > 10 :
+      #textB = textB.replace(matchTxt, "")
+      textB = textB[:index[1]] + textB[index[1]+length:]
     textA = textA[1:]
 
 if __name__ == "__main__" :
@@ -61,8 +66,8 @@ if __name__ == "__main__" :
   #textB = "xyababcdg"
   textA = open("../../hpc21/sniffer/files/file1.txt", "r").read()
   textB = open("../../hpc21/sniffer/files/file2.txt", "r").read()
-  #textA = "".join([random.choice('abcde') for i in xrange(100)])
-  #textB = "".join([random.choice('abcdewx') for i in xrange(100)])
+  #textA = "".join([random.choice('ab') for i in xrange(1000)])
+  #textB = "".join([random.choice('ba') for i in xrange(1000)])
   #print textA
   
   t1 = time.clock()

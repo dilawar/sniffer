@@ -20,7 +20,7 @@ def formatText(txt, lang) :
     return txt
   
 def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
-  if algorithm == "subsequence" :
+  if algorithm == "difflib" :
     wordsA = textA.split()
     wordsB = textB.split()
     if len(wordsA) < 4 or len(wordsB) < 4 :
@@ -45,9 +45,13 @@ def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
     s = difflib.SequenceMatcher(None, textA, textB)
     return "difflib", s.ratio() 
 
+  if algorithm == "quick" :
+    pass 
+
+
   else :
-    print("[E] Algorithm not specified")
-    sys.exit(0)
+    print("[E] This Algorithm is not implemented. Falling back to default.")
+    compareAndReturnResult(textA, textB, algorithm="difflib")
 
 
 def commonPrefix(string1, string2) :
