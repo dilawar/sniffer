@@ -35,8 +35,24 @@ def filterListing(config, listings) :
   regex_flags = config.get('filter', 'regex_flags')
   if max_words == -1 :
     max_words = pow(2,32)
+  ignorecase = False 
+  dotall = False 
+  if regex_flags.upper().find("IGNORECASE") != -1 :
+    ignorecase = True
+  if regex_flags.upper().find("DOTALL") != -1 :
+    dotall = True 
 
-  pat = re.compile(regex, regex_flags)
+  if dotall and ignorecase :
+    pat = re.compile(regex, re.IGNORECASE | re.DOTALL)
+  elif dotall and not ignorecase :
+    pat = re.compile(regex, re.DOTALL)
+  elif not dotall and ignorecase :
+    pat = re.compile(regex, re.IGNORECASE)
+  elif dotall and not ignorecase :
+    pat = re.compile(regex, re.DOTALL)
+  elif not dotall and not ignorecase :
+    pat = re.compile(regex)
+
   newListings = dict()
   for user in listings :
     newFiles = list()
