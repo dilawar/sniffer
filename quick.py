@@ -5,12 +5,13 @@ def subsequence(startA, s1, s2) :
   subsequence while a1 and b1 are starting index in first and second string
   respecitvely. 
   '''
-  subsequences = list()
   aI = startA
   bI = 0 
   matchBegin = False
   matchEnd = False 
-  while(aI < len(s1) and bI < len(s2)) :
+  maxlength = 0
+  index = (-1, -1)
+  while(aI < s1.__len__() and bI < s2.__len__()) :
     #if aI > len(s1) :
     #  print("A", aI, len(s1))
     #if bI > len(s2) :
@@ -24,32 +25,39 @@ def subsequence(startA, s1, s2) :
       if matchBegin :
         matchBegin = False 
         matchEnd = True 
+        lenOfSubSeq = aI - startA 
+        aI = startA 
+        if lenOfSubSeq > 0 :
+          if lenOfSubSeq > maxlength :
+            maxlength = lenOfSubSeq 
+            index = (startA, bI-lenOfSubSeq)
       else :
         bI += 1 
-    if not matchBegin and matchEnd :
-      lenOfSubSeq = aI - startA 
-      aI = startA
-      if lenOfSubSeq > 0 :
-        match = (lenOfSubSeq, startA, bI-lenOfSubSeq)
-        subsequences.append(match)
-  return subsequences
+  return maxlength, index
 
 def quickMatch(textA, textB) :
   matchSequences = dict()
   loopLength = len(textA)
-  for i in xrange(0, loopLength-1) :
-    startA = i 
-    endA = i
-    subsequence(i, textA, textB)
+  done = False 
+  currenIndex = 0
+  while(done == False) :
+    length, index = subsequence(currenIndex, textA, textB)
+    print length, index
+    print textA
+    print textB
+    textA = textA[currenIndex+length:]
+    currenIndex += length
+    if currenIndex >= textA.__len__() :
+      done = True
 
 if __name__ == "__main__" :
   import cProfile as profile 
   import string, random
   import time 
-  text1 = "abcdefg"
-  text2 = "xyababcdg"
-  textA = "".join([random.choice(string.letters) for i in xrange(10000)])
-  textB = "".join([random.choice(string.letters) for i in xrange(10000)])
+  textA = "abcdefg"
+  textB = "xyababcdg"
+  #textA = "".join([random.choice('abcde') for i in xrange(100)])
+  #textB = "".join([random.choice('abcdewx') for i in xrange(100)])
   #print textA
   
   t1 = time.clock()
