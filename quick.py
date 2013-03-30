@@ -10,7 +10,7 @@ def subsequence(startA, s1, s2) :
   matchBegin = False
   matchEnd = False 
   maxlength = 0
-  index = (-1, -1)
+  index = (0, 0)
   while(aI < s1.__len__() and bI < s2.__len__()) :
     #if aI > len(s1) :
     #  print("A", aI, len(s1))
@@ -38,24 +38,29 @@ def subsequence(startA, s1, s2) :
 def quickMatch(textA, textB) :
   matchSequences = dict()
   loopLength = len(textA)
-  done = False 
   currenIndex = 0
-  while(done == False) :
-    length, index = subsequence(currenIndex, textA, textB)
-    print length, index
-    print textA
-    print textB
-    textA = textA[currenIndex+length:]
+  maxlength = 1
+  i = 0
+  while(textA.__len__() > maxlength) :
+    length, index = subsequence(0, textA, textB)
+    if length >  maxlength :
+      maxlength = length
+      print length, index
+      print("Text A: ",textA)
+      print("Text B: ",textB)
+      print("Match : ", textA[index[0]:index[0]+length])
     currenIndex += length
-    if currenIndex >= textA.__len__() :
-      done = True
+    #textB = textB[:index[1]] + textB[index[1]+length:]
+    textA = textA[1:]
 
 if __name__ == "__main__" :
   import cProfile as profile 
   import string, random
   import time 
-  textA = "abcdefg"
-  textB = "xyababcdg"
+  #textA = "abcdefg"
+  #textB = "xyababcdg"
+  textA = open("../../hpc21/sniffer/files/file1.txt", "r").read()
+  textB = open("../../hpc21/sniffer/files/file2.txt", "r").read()
   #textA = "".join([random.choice('abcde') for i in xrange(100)])
   #textB = "".join([random.choice('abcdewx') for i in xrange(100)])
   #print textA
