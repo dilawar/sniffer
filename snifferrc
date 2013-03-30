@@ -5,7 +5,7 @@ regex = .*(vhdl|vhd)$
 language = vhdl
 compiler = ghdl
 # make compare true if you want to compare.
-compare = true
+compare = false
 analyze_result = true 
 send_email = false
 

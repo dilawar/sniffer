@@ -48,3 +48,16 @@ def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
   else :
     print("[E] Algorithm not specified")
     sys.exit(0)
+
+
+def commonPrefix(string1, string2) :
+  prefix = ""
+  done = False;
+  i = 0
+  while(done == False) :
+    if string1[i] == string2[i] :
+      prefix += string1[i]
+    else :
+      done = True
+    i += 1
+  return prefix 

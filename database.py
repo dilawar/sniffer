@@ -1,6 +1,7 @@
 import sqlite3 as sql 
 import os, errno
 import time
+import algorithm 
 
 inMemDb = sql.connect(":memory:")
 
@@ -128,6 +129,14 @@ def writeContent(config, db) :
       rows = c.execute(query, (s,)).fetchall()
       for row in rows :
         userA, userB, fileA, fileB, match = row 
+        prefix = algorithm.commonPrefix(fileA, dbPath)
+        outLevel = len(path.replace(prefix, "")) - 1
+        prefixFile = ""
+        for p in xrange(1, outLevel) :
+          prefixFile += "../"
+        fileA = prefixFile+fileA.replace(prefix, "")
+        fileB = prefixFile+fileB.replace(prefix, "")
+
         #fileA = fileA.replace(srcdir, "").strip("/")
         #fileB = fileB.replace(srcdir, "").strip("/")
         f.write("\"{0}\",\"{1}\",\"{2}\"\n".format(match,fileA, fileB))

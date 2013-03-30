@@ -19,7 +19,7 @@ def findListingsToCompare(config, db) :
   newListings = filterListing(config, listings)
   oldNum = sum([len(i) for i in listings.itervalues()])
   newNum = sum([len(i) for i in newListings.itervalues()])
-  print("[FILTER] Total {0} files filtered.".format(oldNum - newNum))
+  print("[I] Total {0} files filtered.".format(oldNum - newNum))
   return newListings 
 
 def filterListing(config, listings) :
