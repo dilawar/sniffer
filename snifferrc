@@ -10,10 +10,19 @@ analyze_result = true
 send_email = false
 
 [filter]
-ignore_regex = ((Madhav\s+Desai)|(entity\s+(reg|unsigned\_(comparator|adder)|mux\dto\d|decoder\dto\d|Datapath)\s+is))
+regex = ((Madhav\s+Desai)|(entity\s+(reg|unsigned\_(comparator|adder)|mux\dto\d|decoder\dto\d|Datapath)\s+is))
 # larger size will be ignored. -1 for all. In Kb
 max_size = -1
+# Max words a text file can contains. -1 for 2^32.
+max_words = 10000
+# Mininum words a text files must contain.
+min_words = 100
 autotest = false
+
+[algorithm]
+# Available algoritms : difflib, quick, 
+name = difflib
+
 
 [database]
 path = /home/dilawar/Works/hpc21/2013ee668/Assignments/A4/db/
