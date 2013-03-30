@@ -32,10 +32,11 @@ def filterListing(config, listings) :
   min_words = int(config.get('filter', 'min_words'))
   max_words = int(config.get('filter', 'max_words'))
   regex = config.get('filter', 'regex')
+  regex_flags = config.get('filter', 'regex_flags')
   if max_words == -1 :
     max_words = pow(2,32)
 
-  pat = re.compile(regex, re.IGNORECASE | re.DOTALL)
+  pat = re.compile(regex, regex_flags)
   newListings = dict()
   for user in listings :
     newFiles = list()

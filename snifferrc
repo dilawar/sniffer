@@ -10,7 +10,9 @@ analyze_result = true
 send_email = false
 
 [filter]
+# If this regex is matched then the file will be ignored. 
 regex = ((Madhav\s+Desai)|(entity\s+(reg|unsigned\_(comparator|adder)|mux\dto\d|decoder\dto\d|Datapath)\s+is))
+regex_flags = re.DOTALL | re.IGNORECASE 
 # larger size will be ignored. -1 for all. In Kb
 max_size = -1
 # Max words a text file can contains. -1 for 2^32.
