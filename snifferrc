@@ -18,7 +18,7 @@ compiler = ghdl
 # make compare true if you want to compare. If this is not set to true, it won't
 # match. This is here for development purpose. In most cases, this should be
 # true.
-compare = false
+compare = true
 
 # Dump the results of analysis in directory of database.
 analyze_result = true 
