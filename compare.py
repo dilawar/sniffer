@@ -25,11 +25,18 @@ def findListingsToCompare(config, db) :
 def filterListing(config, listings) :
   max_size = int(config.get('filter', 'max_size'))
   if max_size == -1 :
-    max_size = 10000000
+    max_size = pow(2,32)
   else :
     max_size = max_size*1024
-  regex = config.get('filter', 'ignore_regex')
-  pat = re.compile(regex, re.IGNORECASE | re.DOTALL)
+  
+  min_words = int(config.get('filter', 'min_words'))
+  max_words = int(config.get('filter', 'max_words'))
+  regex = config.get('filter', 'regex')
+  regex_flags = config.get('filter', 'regex_flags')
+  if max_words == -1 :
+    max_words = pow(2,32)
+
+  pat = re.compile(regex, regex_flags)
   newListings = dict()
   for user in listings :
     newFiles = list()
@@ -40,8 +47,14 @@ def filterListing(config, listings) :
       fileSize = int(size)
       with open(filePath, "r") as f :
         txt = f.read()
-      if pat.search(txt) or size > max_size : 
-        print("[FILTER] Ignore {0}.".format(name))
+      if size > max_size :
+        print('[FILTER] Ignored due to large size : {0}'.format(name))
+      elif len(txt.split()) < min_words :
+        print('[FILTER] Ignored due to few words : {0}'.format(name))
+      elif len(txt.split()) > max_words :
+        print('[FILTER] Ignored due to too-many words : {0}'.format(name))
+      elif pat.search(txt) : 
+        print("[FILTER] Ignoring because regex is found : {0}.".format(name))
       else :
         newFiles.append(file)
     newListings[user] = newFiles
