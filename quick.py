@@ -10,7 +10,7 @@ def subsequence(startA, s1, s2) :
   matchBegin = False
   matchEnd = False 
   maxlength = 0
-  index = (0, 0)
+  index = 0
   while(aI < s1.__len__() and bI < s2.__len__()) :
     #if aI > len(s1) :
     #  print("A", aI, len(s1))
@@ -30,7 +30,7 @@ def subsequence(startA, s1, s2) :
         if lenOfSubSeq > 0 :
           if lenOfSubSeq > maxlength :
             maxlength = lenOfSubSeq 
-            index = (startA, bI-lenOfSubSeq)
+            index = bI-lenOfSubSeq
       else :
         bI += 1 
   return maxlength, index
@@ -45,18 +45,24 @@ def quickMatch(textA, textB) :
     length, index = subsequence(0, textA, textB)
     if length > 1 :
       textA = textA[length:]
+      i += length
     if length >  maxlength :
       maxlength = length
       print length, index
       #print("Text A: ",textA)
       #print("Text B: ",textB)
-      matchTxt = textA[index[0]:index[0]+length]
+      matchTxt = textA[:length]
       print("[M] : ", matchTxt)
     currenIndex += length
     if length > 10 :
+      pass
       #textB = textB.replace(matchTxt, "")
-      textB = textB[:index[1]] + textB[index[1]+length:]
+      #textB = textB[:index] + textB[index+length:]
     textA = textA[1:]
+    i += 1
+    matchSequences[(i, index)] = matchTxt
+
+  return matchSequences
 
 if __name__ == "__main__" :
   import cProfile as profile 
@@ -71,8 +77,12 @@ if __name__ == "__main__" :
   #print textA
   
   t1 = time.clock()
-  quickMatch(textA, textB)
+  matchSequences = quickMatch(textA.split(), textB.split())
   print("A: ", time.clock() - t1)
+  #for m in matchSequences :
+  #  if len(matchSequences[m]) > 10 :
+  #    print(m, " ".join(matchSequences[m]))
+  #    print("\n")
   
   import difflib 
   t1 = time.clock()

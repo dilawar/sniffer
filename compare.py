@@ -145,7 +145,7 @@ def compare(config, db) :
 
 def compareTwoFiles(config, db, userA, fileA, userB, fileB, msg) :
   language = config.get('source', 'language')
-  algorithm = config.get('algorithm', 'name')
+  algo = config.get('algorithm', 'name')
   textA = getText(fileA, language)
   textB = getText(fileB, language)
   textA = algorithm.formatText(textA, language)
