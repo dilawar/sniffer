@@ -21,8 +21,13 @@ def formatText(txt, lang) :
   
 def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
   if algorithm == "subsequence" :
-    wordsA = textA.split()
-    wordsB = textB.split()
+    try :
+      wordsA = textA.split()
+      wordsB = textB.split()
+    except (RuntimeError, ValueError, AttributeError) :
+      print("[WARN] PDF is not proper format.")
+      return "Pdf decode error", 0.0
+
     if len(wordsA) < 4 or len(wordsB) < 4 :
       return "Less than four words", 0.0
 

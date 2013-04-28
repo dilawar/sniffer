@@ -19,11 +19,10 @@ class Pdf :
         # sort the page_text hash by the keys (x0,x1 values of the bbox),
         # which produces a top-down, left-to-right sequence of related columns
         text_content.append(''.join(v))
-
     return '\n'.join(text_content)
 
 
-  def fix_text_tem(self, path, lang_type):
+  def fix_text(self, path):
     rsrcmgr = PDFResourceManager()
     retstr = StringIO()
     codec = 'utf-8'
@@ -50,12 +49,12 @@ class Pdf :
 #          content = " ".join(content.replace(u"\xa0", " ").strip().split())
 #      return content
 #
-  def fix_text(self, file, lang_type) :
-    try :
-      process_text = self.getPDFContent(file).encode("ascii", "ignore")
-      line = 50
-      return process_text, line
-    except AttributeError :
-      print "Attribute error."
-
-
+#  def fix_text(self, file) :
+#    try :
+#      process_text = self.getPDFContent(file).encode("ascii", "ignore")
+#      line = 50
+#      return process_text, line
+#    except AttributeError :
+#      print "Attribute error."
+#
+#

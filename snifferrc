@@ -2,15 +2,15 @@
 # Dir where various folders containing source codes or text files are located.
 # This directory will be 'walked' and each subdirectory inside this directory
 # will be considered as a separate directory. 
-dir = /home/dilawar/Works/hpc21/2013ee668/Assignments/A4/Submissions
+dir = /home/dilawar/Works/hpc21/2013ee668/Assignments/A5/Submissions
 
 # This is the regular expression of the names of files. If you want to compare
 # all files leave it empty or .* will do. 
-regex = .*(vhdl|vhd)$
+regex = .*(pdf)$
 
 # Specify language of file.
 # Available : vhdl, verilog, ctype, text, pdf 
-language = vhdl
+language = pdf
 
 # Compiler. Currently this is of no use.
 compiler = ghdl
@@ -28,14 +28,14 @@ send_email = false
 
 [filter]
 # If this regex is found in the text of file, then the file is ignored. 
-regex = ((Madhav\s+Desai)|(entity\s+(reg|\w*mux\w*|unsigned\_(comparator|adder)|mux\dto\d|decoder\dto\d|Datapath)\s+is)|(operand1.+operand2.+result.+overflow)|(data\_in.+data\_out.+clock))
+regex = ((entity\s+QueueTb)|(Madhav\s+Desai))
 regex_flags = DOTALL,IGNORECASE 
 
 # larger size will be ignored. -1 for all. In Kb
 max_size = -1
 
 # Max words a text file can contains. -1 for 2^32.
-max_words = 10000
+max_words = 10000000
 # Mininum words a text files must contain.
 min_words = 100
 
@@ -45,7 +45,7 @@ name = difflib
 
 [database]
 # Path where sqlite3 database should be saved.
-path = /home/dilawar/Works/hpc21/2013ee668/Assignments/A4/db/
+path = /home/dilawar/Works/hpc21/2013ee668/Assignments/A5/db/
 
 # Name of the database.
 name = sniffer.sqlite3 
