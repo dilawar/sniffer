@@ -25,6 +25,7 @@ def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
       wordsA = textA.split()
       wordsB = textB.split()
     except (RuntimeError, ValueError, AttributeError) :
+      print(dir(textA))
       print("[WARN] Pdf-decode error ")
       return "Pdf decode error", 0.0
 
