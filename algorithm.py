@@ -25,7 +25,7 @@ def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
       wordsA = textA.split()
       wordsB = textB.split()
     except (RuntimeError, ValueError, AttributeError) :
-      print("[WARN] PDF is not proper format.")
+      print("[WARN] Pdf-decode error ")
       return "Pdf decode error", 0.0
 
     if len(wordsA) < 4 or len(wordsB) < 4 :
