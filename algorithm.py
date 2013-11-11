@@ -23,6 +23,10 @@ def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
   if algorithm == "subsequence" :
     try :
       wordsA = textA.split()
+    except (AttributeError) :
+      wordsA = textA[0].split()
+
+    try :
       wordsB = textB.split()
     except (RuntimeError, ValueError, AttributeError) :
       print(dir(textA))
