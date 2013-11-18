@@ -1,8 +1,9 @@
-import sqlite3 as sql 
+import sqlite3 as sql
 import re
 import os
 import algorithm
 import database
+import datetime
 
 def findListingsToCompare(config, db) :
   listings = dict()
@@ -12,15 +13,15 @@ def findListingsToCompare(config, db) :
   print("[I] Total {0} distint owner of files ".format(len(users)))
   # Now for each of these students fetch their files.
   for user in users :
-    query = '''SELECT name, root, size FROM listings WHERE owner=? 
+    query = '''SELECT name, root, size FROM listings WHERE owner=?
               ORDER BY name DESC '''
     files = c.execute(query, (user)).fetchall()
-    listings[user] = files 
+    listings[user] = files
   newListings = filterListing(config, listings)
   oldNum = sum([len(i) for i in listings.itervalues()])
   newNum = sum([len(i) for i in newListings.itervalues()])
   print("[I] Total {0} files filtered.".format(oldNum - newNum))
-  return newListings 
+  return newListings
 
 def filterListing(config, listings) :
   max_size = int(config.get('filter', 'max_size'))
@@ -28,19 +29,19 @@ def filterListing(config, listings) :
     max_size = pow(2,32)
   else :
     max_size = max_size*1024
-  
+
   min_words = int(config.get('filter', 'min_words'))
   max_words = int(config.get('filter', 'max_words'))
   regex = config.get('filter', 'regex')
   regex_flags = config.get('filter', 'regex_flags')
   if max_words == -1 :
     max_words = pow(2,32)
-  ignorecase = False 
-  dotall = False 
+  ignorecase = False
+  dotall = False
   if regex_flags.upper().find("IGNORECASE") != -1 :
     ignorecase = True
   if regex_flags.upper().find("DOTALL") != -1 :
-    dotall = True 
+    dotall = True
 
   if dotall and ignorecase :
     pat = re.compile(regex, re.IGNORECASE | re.DOTALL)
@@ -58,7 +59,7 @@ def filterListing(config, listings) :
     newFiles = list()
     files = listings[user]
     for file in files :
-      name, root, size = file 
+      name, root, size = file
       filePath = os.path.join(root, name)
       fileSize = int(size)
       with open(filePath, "r") as f :
@@ -69,7 +70,7 @@ def filterListing(config, listings) :
         print('[FILTER] Ignored due to few words : {0}'.format(name))
       elif len(txt.split()) > max_words :
         print('[FILTER] Ignored due to too-many words : {0}'.format(name))
-      elif pat.search(txt) : 
+      elif pat.search(txt) :
         print("[FILTER] Ignoring because regex is found : {0}.".format(name))
       else :
         newFiles.append(file)
@@ -84,9 +85,9 @@ def compare(config, db) :
   # Make a copy for local modification.
   tempListings = listings.copy()
 
-  query = '''REPLACE INTO match 
-      (userA, fileA, userB, fileB, match, algorithm, result) 
-      VALUES 
+  query = '''REPLACE INTO match
+      (userA, fileA, userB, fileB, match, algorithm, result)
+      VALUES
       (?, ?, ?, ?, ?, ?, ?)'''
   c = db.cursor()
 
@@ -126,19 +127,21 @@ def compare(config, db) :
               if ratio > 0.45 :
                 result = "moderate"
               if ratio > 0.55 :
-                result = "high" 
+                result = "high"
               if ratio > 0.65 :
-                result = "veryhigh" 
+                result = "veryhigh"
               if ratio > 0.80 :
                 result = "identical"
               filePathA = os.path.join(rootA, nameA)
               filePathB = os.path.join(rootB, nameB)
+              st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+              print st
               print("\n[Match] : {2} {3} \n\t|- {0} <--> {1}".format(userA[0]+" : "+nameA,
                 userB[0]+" : "+nameB , ratio, msg))
               c.execute(query, (userA[0], filePathA, userB[0], filePathB, ratio,
                 res, result))
           userComparisons += 1
-    totalComparisions += userComparisons 
+    totalComparisions += userComparisons
     print("[II] For user {0} : {1} comparisions".format(userA[0], userComparisons))
     db.commit()
   print("[I] Total {0} comparisions".format(totalComparisions))
@@ -152,9 +155,9 @@ def compareTwoFiles(config, db, userA, fileA, userB, fileB, msg) :
   return algorithm.compareAndReturnResult(textA, textB, algorithm="subsequence")
 
 def getText(file, language) :
-  name, root, size = file 
+  name, root, size = file
   filePath = os.path.join(root, name)
-  if language != "pdf" : 
+  if language != "pdf" :
     with open(filePath, "r") as f :
       txt = f.read()
     return txt
