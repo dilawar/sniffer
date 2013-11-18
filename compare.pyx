@@ -55,6 +55,7 @@ def filterListing(config, listings) :
     pat = re.compile(regex)
 
   newListings = dict()
+  cdef long long sizeOfText = 0
   for user in listings :
     newFiles = list()
     files = listings[user]
@@ -64,12 +65,13 @@ def filterListing(config, listings) :
       fileSize = int(size)
       with open(filePath, "r") as f :
         txt = f.read()
+      sizeOfText = len(txt)
       if size > max_size :
         print('[FILTER] Ignored due to large size : {0}'.format(name))
-      elif len(txt.split()) < min_words :
-        print('[FILTER] Ignored due to few words : {0}'.format(name))
-      elif len(txt.split()) > max_words :
-        print('[FILTER] Ignored due to too-many words : {0}'.format(name))
+      elif sizeOfText < min_words :
+        print('[FILTER] Very few words : {0}'.format(name))
+      elif sizeOfText > max_words :
+        print('[FILTER] Too-many words {1} : {0}'.format(name, sizeOfText))
       elif pat.search(txt) :
         print("[FILTER] Ignoring because regex is found : {0}.".format(name))
       else :
