@@ -11,6 +11,8 @@ def formatText(txt, lang) :
     import lang_verilog as verilog
     obj = verilog.Verilog()
     return obj.fix_text(txt)
+  if lang == "text":
+      return txt
   #if lang == "pdf" :
   #  import lang_pdf as pdf
   #  obj = pdf.Pdf()
@@ -19,8 +21,8 @@ def formatText(txt, lang) :
     print("[W] This language is not supported. Assuming text ...")
     return txt
 
-def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
-  if algorithm == "difflib" :
+def compareAndReturnResult(textA, textB, algoName="subsequence" ) :
+  if algoName == "difflib" :
     wordsA = textA.split()
     wordsB = textB.split()
     if len(wordsA) < 4 or len(wordsB) < 4 :
@@ -44,15 +46,16 @@ def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
     # maching in these two files.
     s = difflib.SequenceMatcher(None, textA, textB)
     return "difflib", s.ratio()
-
-  if algorithm == "quick" :
-    pass
-
+#
+#  if algoName == "quick" :
+#      print("E", "This algoName is not implemented"
+#    pass
+#
 
   else :
-    print("[E] This Algorithm is not implemented. Falling back to default.")
-    compareAndReturnResult(textA, textB, algorithm="difflib")
-
+    print algoName
+    print("[W] This algoName is not implemented. Falling back to default.")
+    return compareAndReturnResult(textA, textB, algoName="difflib")
 
 def commonPrefix(string1, string2) :
   prefix = ""

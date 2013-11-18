@@ -2,15 +2,15 @@
 # Dir where various folders containing source codes or text files are located.
 # This directory will be 'walked' and each subdirectory inside this directory
 # will be considered as a separate directory. 
-dir = /home/dilawar/Works/hpc21/2013ee668/Assignments/A5/Submissions
+dir = /media/Bhandar/EE671/
 
 # This is the regular expression of the names of files. If you want to compare
 # all files leave it empty or .* will do. 
-regex = .*(vhdl|vhd)$
+regex = .*(spice|cir)$
 
 # Specify language of file.
 # Available : vhdl, verilog, ctype, text, pdf 
-language = vhdl
+language = text
 
 # Compiler. Currently this is of no use.
 compiler = ghdl
@@ -45,8 +45,7 @@ name = difflib
 
 [database]
 # Path where sqlite3 database should be saved.
-path = /home/dilawar/Works/hpc21/2013ee668/Assignments/A5/db/
-
+path = db
 # Name of the database.
 name = sniffer.sqlite3 
 #name = :memory:

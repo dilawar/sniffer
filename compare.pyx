@@ -22,15 +22,16 @@ def findListingsToCompare(config, db) :
   print("[I] Total {0} files filtered.".format(oldNum - newNum))
   return newListings
 
+
 def filterListing(config, listings) :
-  max_size = int(config.get('filter', 'max_size'))
+  cdef long long max_size = int(config.get('filter', 'max_size'))
   if max_size == -1 :
-    max_size = pow(2,32)
+    max_size = pow(2,31)
   else :
     max_size = max_size*1024
 
-  min_words = int(config.get('filter', 'min_words'))
-  max_words = int(config.get('filter', 'max_words'))
+  cdef int min_words = int(config.get('filter', 'min_words'))
+  cdef int max_words = int(config.get('filter', 'max_words'))
   regex = config.get('filter', 'regex')
   regex_flags = config.get('filter', 'regex_flags')
   if max_words == -1 :
@@ -117,7 +118,11 @@ def compare(config, db) :
           nameB, rootB, sizeB = fileB
           # compare files here.
           msg = " # Processing user no {0} out of total {1} ".format(i, totalUsers)
-          res, ratio = compareTwoFiles(config, db, userA, fileA, userB, fileB, msg)
+          try:
+            res, ratio = compareTwoFiles(config, db, userA, fileA, userB, fileB, msg)
+          except Exception as e:
+              print("[Error] Comparison failed with error {0}".format(e))
+              return
           if res == "difflib" :
             result = ""
             if ratio > 0.3 :
@@ -150,7 +155,8 @@ def compareTwoFiles(config, db, userA, fileA, userB, fileB, msg) :
   textB = getText(fileB, language)
   textA = algorithm.formatText(textA, language)
   textB = algorithm.formatText(textB, language)
-  return algorithm.compareAndReturnResult(textA, textB, algorithm=algorithm)
+  result = algorithm.compareAndReturnResult(textA, textB, algo)
+  return result
 
 def getText(file, language) :
   name, root, size = file
