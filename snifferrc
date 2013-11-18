@@ -36,7 +36,7 @@ regex_flags = DOTALL,IGNORECASE
 max_size = -1
 
 # Max words a text file can contains. -1 for 2^32.
-max_words = 10000000
+max_words = 20000
 # Mininum words a text files must contain.
 min_words = 100
 
@@ -45,8 +45,8 @@ min_words = 100
 name = difflib
 
 [database]
-# Path where sqlite3 database should be saved. 
-path = db
+# path : Path where sqlite3 database should be saved. 
+path = /media/Bhandar/
 
 # Name of the database.
 name = sniffer.sqlite3 

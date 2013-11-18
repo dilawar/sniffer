@@ -64,12 +64,13 @@ def filterListing(config, listings) :
       fileSize = int(size)
       with open(filePath, "r") as f :
         txt = f.read()
+      nw = txt.split()
       if size > max_size :
         print('[FILTER] Ignored due to large size : {0}'.format(name))
-      elif len(txt.split()) < min_words :
-        print('[FILTER] Ignored due to few words : {0}'.format(name))
-      elif len(txt.split()) > max_words :
-        print('[FILTER] Ignored due to too-many words : {0}'.format(name))
+      elif len(nw) < min_words :
+        print('[FILTER] Ignored, few words {1} : {0}'.format(name, len(nw)))
+      elif len(nw) > max_words :
+        print('[FILTER] Ignored, too-many words {1}: {0}'.format(name, len(nw)))
       elif pat.search(txt) :
         print("[FILTER] Ignoring because regex is found : {0}.".format(name))
       else :
@@ -134,7 +135,7 @@ def compare(config, db) :
                 result = "identical"
               filePathA = os.path.join(rootA, nameA)
               filePathB = os.path.join(rootB, nameB)
-              st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+              st = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
               print st
               print("\n[Match] : {2} {3} \n\t|- {0} <--> {1}".format(userA[0]+" : "+nameA,
                 userB[0]+" : "+nameB , ratio, msg))
