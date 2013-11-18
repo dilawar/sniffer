@@ -1,4 +1,4 @@
-import sqlite3 as sql 
+import sqlite3 as sql
 import os, sys
 import difflib
 
@@ -8,17 +8,17 @@ def formatText(txt, lang) :
     obj = vhdl.VHDL()
     return obj.fix_text(txt)
   if lang == "verilog" :
-    import lang_verilog as verilog 
+    import lang_verilog as verilog
     obj = verilog.Verilog()
     return obj.fix_text(txt)
-  if lang == "pdf" :
-    import lang_pdf as pdf 
-    obj = pdf.Pdf()
-    return obj.fix_text(txt)
+  #if lang == "pdf" :
+  #  import lang_pdf as pdf
+  #  obj = pdf.Pdf()
+  #  return obj.fix_text(txt)
   else :
     print("[W] This language is not supported. Assuming text ...")
     return txt
-  
+
 def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
   if algorithm == "difflib" :
     wordsA = textA.split()
@@ -28,25 +28,25 @@ def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
 
     lR = float(len(wordsA)) / len(wordsB)
     if lR > 1.0 :
-      lR = 1/lR 
+      lR = 1/lR
     if lR < 0.2 :
       return "Files differ in sizes", lR
 
-    # check intersection of keywords 
+    # check intersection of keywords
     setA = set(wordsA)
     setB = set(wordsB)
-      
-    intersectionSize =  float(len(setA.intersection(setB))) / min(len(setA), len(setB)) 
+
+    intersectionSize =  float(len(setA.intersection(setB))) / min(len(setA), len(setB))
     if intersectionSize < 0.35 :
-      return "Small keyword intersection", intersectionSize 
+      return "Small keyword intersection", intersectionSize
 
     # if intersection of these two set is very small then there is little
-    # maching in these two files. 
+    # maching in these two files.
     s = difflib.SequenceMatcher(None, textA, textB)
-    return "difflib", s.ratio() 
+    return "difflib", s.ratio()
 
   if algorithm == "quick" :
-    pass 
+    pass
 
 
   else :
@@ -64,4 +64,4 @@ def commonPrefix(string1, string2) :
     else :
       done = True
     i += 1
-  return prefix 
+  return prefix

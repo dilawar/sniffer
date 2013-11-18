@@ -1,10 +1,9 @@
-import sqlite3 as sql 
+import sqlite3 as sql
 import os, errno
 import time
-import algorithm 
+import algorithm
 import sys
 
-inMemDb = sql.connect(":memory:")
 
 def buildListingDb(config) :
   dbPath = config.get('database', 'path')
@@ -12,17 +11,17 @@ def buildListingDb(config) :
   iscomparing = config.get('source', 'compare')
   print("[I] Creating db in {0}".format(dbPath))
   try :
-    os.makedirs(dbPath) 
+    os.makedirs(dbPath)
   except OSError as exception :
     if exception.errno != errno.EEXIST :
-      raise 
+      raise
   if dbName != ":memory:" :
     dbfile = os.path.join(dbPath, dbName)
     if os.path.exists(dbfile) :
-      if iscomparing == "true" : 
+      if iscomparing == "true" :
         os.rename(dbfile, dbfile+time.strftime("%Y%m%d%H%M%S"))
       else :
-        pass 
+        pass
     db = sql.connect(dbfile)
   else :
     db = sql.connect(dbName)
@@ -38,36 +37,36 @@ def initializeDb(db) :
   c.execute(query)
 
   query = ''' CREATE TABLE listings (
-            name VARCHAR NOT NULL 
-            , owner VARCHAR 
-            , root VARCHAR NOT NULL 
+            name VARCHAR NOT NULL
+            , owner VARCHAR
+            , root VARCHAR NOT NULL
             , type VARCHAR
-            , size INT NOT NULL 
-            , lines INT 
+            , size INT NOT NULL
+            , lines INT
             , status VARCHAR
             , PRIMARY KEY(root, name))'''
   c.execute(query)
 
   query = '''CREATE TABLE IF NOT EXISTS match (
-            userA VARCHAR NOT NULL 
+            userA VARCHAR NOT NULL
             , fileA VARCHAR NOT NULL
             , userB VARCHAR NOT NULL
-            , fileB VARCHAR NOT NULL 
-            , match REAL NOT NULL 
-            , algorithm VARCHAR 
+            , fileB VARCHAR NOT NULL
+            , match REAL NOT NULL
+            , algorithm VARCHAR
             , result VARCHAR
             , PRIMARY KEY(fileA, fileB, algorithm))
             '''
   c.execute(query)
 
   c.execute('DROP TABLE IF EXISTS summary')
-  
+
   query = '''CREATE TABLE IF NOT EXISTS summary (
     userA VARCHAR NOT NULL
-    , userB VARCHAR NOT NULL 
+    , userB VARCHAR NOT NULL
     , num_matches INT default '1'
     , avg_index REAL default '0.0'
-    , PRIMARY KEY(userA, userB) 
+    , PRIMARY KEY(userA, userB)
     ) '''
   c.execute(query)
   db.commit()
@@ -90,12 +89,12 @@ def populateDB(config, db) :
     for file in files :
       if pat.match(file) :
         countFile += 1
-        fileName = file 
+        fileName = file
         filePath = os.path.join(root, file)
         if not os.path.exists(filePath) :
           print("[W] Something weired has happened. {0} does not \
               exists".format(filePath))
-          return 
+          return
         sizeOfFile = os.path.getsize(filePath)
         owner = root.replace(dir, "")
         owner = owner.strip("/")
@@ -105,7 +104,7 @@ def populateDB(config, db) :
         c.execute(query, (fileName, root, sizeOfFile, regex, owner))
   db.commit()
   print("[I] Total {0} programs".format(countFile))
-  return db 
+  return db
 
 def writeContent(config, db) :
   path = config.get('database', 'path')
@@ -114,10 +113,10 @@ def writeContent(config, db) :
   srcdir += "/"
   name = config.get('database', 'name')
   dbPath = os.path.join(path, name)
-  if name == ":memory:" : 
+  if name == ":memory:" :
     print("[I] Loading db from memory dump ")
     dbPath = os.path.join(path, "sniffer.sqlite3")
-    db = sqlite.connect("")
+    db = sql.connect(name)
     db.execute('.read {0}'.format(dbPath))
 
   db = sql.connect(dbPath)
@@ -129,7 +128,7 @@ def writeContent(config, db) :
     with open(os.path.join(path, s+"_serverity.csv"), "w") as f :
       rows = c.execute(query, (s,)).fetchall()
       for row in rows :
-        userA, userB, fileA, fileB, match = row 
+        userA, userB, fileA, fileB, match = row
         prefix = algorithm.commonPrefix(fileA, dbPath)
         outLevel = len(path.replace(prefix, "")) - 1
         prefixFile = ""
@@ -147,26 +146,26 @@ def dump(config, db) :
   path = config.get('database', 'path')
   name = config.get('database', 'name')
   if name == ":memory:" :
-    print("[I] Dumping the in memory database to a file : {0}".format(fileToDump))
-    # dump it 
     fileToDump = os.path.join(path, "sniffer.sqlite3")
+    print("[I] Dumping the in memory database to a file : {0}".format(fileToDump))
+    # dump it
     with open(fileToDump, 'w') as f :
       for line in db.iterdump() :
         f.write('%s\n' % line)
-  else : return 
+  else : return
 
 def generateSummary(config, db) :
   #global inMemDb
-  #table_to_copy = "match" 
+  #table_to_copy = "match"
   #query = "".join(line for line in db.iterdump())
   #inMemDb.executescript(query)   # copies the table match.
   c = db.cursor()
-  
+
   query = '''SELECT DISTINCT userA FROM match'''
   print("[DB] Fetching distinct first users ..."),
   userAs = c.execute(query).fetchall()
   print("done")
-  
+
   print("[DB] Fetching distinct second users ..."),
   query = '''SELECT DISTINCT userB FROM match'''
   userBs = c.execute(query).fetchall()
@@ -185,7 +184,7 @@ def generateSummary(config, db) :
       avg_index = 0.0
       rows = c.execute(query, (userA, userB,)).fetchall()
       for row in rows :
-        fileA, fileB, match = row 
+        fileA, fileB, match = row
         avg_index = (match + num_matches * avg_index) / (num_matches+1)
         num_matches += 1
       if num_matches > 0 :
@@ -193,14 +192,14 @@ def generateSummary(config, db) :
   print("done")
   # Here is summary.
   for k in summary :
-    userA, userB = k 
+    userA, userB = k
     num_matches, avg_index = summary[k]
     c.execute('''INSERT OR IGNORE INTO summary (userA, userB, num_matches
       , avg_index) VALUES (?, ?, ?, ?)''', (userA, userB, num_matches,
         avg_index,))
   db.commit()
 
-def genrateDOT(config, db) : 
+def genrateDOT(config, db) :
   #global inMemDb
   c = db.cursor()
   dbPath = config.get("database", "path")
@@ -229,7 +228,7 @@ def genrateDOT(config, db) :
           if avg > 0.0 :
             color = "#ffff00"
           if avg > 0.5 :
-            color = "#ffa000" 
+            color = "#ffa000"
           if avg > 0.6 :
             color = "blue"
           if avg > 0.7 :

@@ -24,7 +24,7 @@ class CreateMsgAndDatabase():
         self.src_path = dir.split('stats')[0]
         self.down_dir = dir.split(activity_name)[0]
         self.grade_file = self.down_dir+'/grades.txt'
-        
+
     def save_emails_convicted(self, convict_dict, accused_dict):
 
         '''
@@ -38,10 +38,10 @@ class CreateMsgAndDatabase():
         else :
             print 'File grades.txt (CSV) does not exists in {0}'\
                     .format(self.down_dir)
-            sys.exit(32)
+            return
 
-        
-        # create data_base of emails and marks. 
+
+        # create data_base of emails and marks.
         dict_students = cl.defaultdict(list)
         # ignore the first line.
         first_line = fl_grader.readline()
@@ -52,12 +52,12 @@ class CreateMsgAndDatabase():
             else : # append surname.
                 key = ln[0]+' '+ln[1]
 
-            dict_students[key] = ln[2:] 
+            dict_students[key] = ln[2:]
 
-        for i in convict_dict : 
+        for i in convict_dict :
             tarfile_name = self.log_path+'/'+'_'.join(self.activity.split())\
                     +'_'+'_'.join(i.split())+'.tar'
-            if len(dict_students[i]) < 4 : pass 
+            if len(dict_students[i]) < 4 : pass
             else :
                 email_id = dict_students[i][3]
                 msg = ''
@@ -93,7 +93,7 @@ class CreateMsgAndDatabase():
                 text = f.read()
                 text = text + msg
                 text = text +'\n--\n' \
-                        +'\nThis email is system-generated. You need not reply.' 
+                        +'\nThis email is system-generated. You need not reply.'
 
                 message.attach(MIMEText(text))
                 # attach a file
@@ -103,13 +103,13 @@ class CreateMsgAndDatabase():
                 part.add_header('Content-Disposition', 'attachment; filename="%s"'\
                         % os.path.basename(tarfile_name))
                 message.attach(part)
-             
+
 
                 with open(self.log_path+"/"+unicode(email_id)+"_email_con.msg",\
                         'w') as email_msg :
                     email_msg.write(message.as_string())
-                 
-    
+
+
     def save_emails_accused(self, convict_dict, accused_dict):
 
         '''
@@ -123,9 +123,9 @@ class CreateMsgAndDatabase():
         else :
             print 'File grades.txt (CSV) does not exists in {0}'\
                     .format(self.down_dir)
-            sys.exit(32)
-        
-        # create data_base of emails and marks. 
+            return
+
+        # create data_base of emails and marks.
         dict_students = cl.defaultdict(list)
         # ignore the first line.
         first_line = fl_grader.readline()
@@ -136,9 +136,9 @@ class CreateMsgAndDatabase():
             else : # append surname.
                 key = ln[0]+' '+ln[1]
 
-            dict_students[key] = ln[2:] 
+            dict_students[key] = ln[2:]
 
-        for i in accused_dict : 
+        for i in accused_dict :
             tarfile_name = self.log_path+'/'+'_'.join(self.activity.split())\
                     +'_'+'_'.join(i.split())+'.tar'
             if len(dict_students[i]) < 4 : pass
@@ -177,7 +177,7 @@ class CreateMsgAndDatabase():
                 text = f.read()
                 text = text + msg
                 text = text +'\n--\n' \
-                        +'\nThis email is system-generated. You need not reply.' 
+                        +'\nThis email is system-generated. You need not reply.'
 
                 message.attach(MIMEText(text))
                 # attach a file
@@ -187,11 +187,11 @@ class CreateMsgAndDatabase():
                 part.add_header('Content-Disposition', 'attachment; filename="%s"'\
                         % os.path.basename(tarfile_name))
                 message.attach(part)
-     
+
                 with open(self.log_path+"/"+unicode(email_id)+"_email_accuse.msg",\
                         'w') as email_msg :
                     email_msg.write(message.as_string())
-                 
+
     def create_moodle_database(self) :
         pass
 
