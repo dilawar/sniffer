@@ -3,15 +3,15 @@
 # This directory will be 'walked' and each subdirectory inside this directory
 # will be considered as a separate directory. 
 #dir = /home/dilawar/Works/hpc21/2013ee668/Assignments/A5/Submissions
-dir = /media/Bhandar/EE671
+dir = /home2/dilawar/Bhandar/assgn5/pdfs
 
 # This is the regular expression of the names of files. If you want to compare
 # all files leave it empty or .* will do. 
-regex = .*(spice|cir)$
+regex = .*(pdf)$
 
 # Specify language of file.
 # Available : vhdl, verilog, ctype, text, pdf 
-language = text
+language = pdf
 
 # Compiler. Currently this is of no use.
 compiler = ghdl
@@ -36,7 +36,7 @@ regex_flags = DOTALL,IGNORECASE
 max_size = -1
 
 # Max words a text file can contains. -1 for 2^32.
-max_words = 20000
+max_words = -1
 # Mininum words a text files must contain.
 min_words = 100
 
@@ -46,7 +46,7 @@ name = difflib
 
 [database]
 # path : Path where sqlite3 database should be saved. 
-path = /media/Bhandar/
+path = /home2/dilawar/Bhandar/assgn5/
 
 # Name of the database.
 name = sniffer.sqlite3 
