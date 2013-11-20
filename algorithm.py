@@ -13,6 +13,7 @@ def formatText(txt, lang) :
     return obj.fix_text(txt)
   if lang == "pdf" :
     import lang_pdf as pdf
+    # NOTE: txt is filename
     obj = pdf.Pdf()
     return obj.fix_text(txt)
   if lang == "text":
@@ -23,17 +24,8 @@ def formatText(txt, lang) :
 
 def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
   if algorithm == "subsequence" :
-    try :
-      wordsA = textA.split()
-    except (AttributeError) :
-      wordsA = textA[0].split()
-
-    try :
-      wordsB = textB.split()
-    except (RuntimeError, ValueError, AttributeError) :
-      print(dir(textA))
-      print("[WARN] Pdf-decode error ")
-      return "Pdf decode error", 0.0
+    wordsA = textA.split()
+    wordsB = textB.split()
 
     if len(wordsA) < 4 or len(wordsB) < 4 :
       return "Less than four words", 0.0

@@ -2,6 +2,7 @@ import sqlite3 as sql
 import os, errno
 import time
 import algorithm 
+import sys
 
 inMemDb = sql.connect(":memory:")
 
