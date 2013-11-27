@@ -3,7 +3,7 @@
 # This directory will be 'walked' and each subdirectory inside this directory
 # will be considered as a separate directory. 
 #dir = /home/dilawar/Works/hpc21/2013ee668/Assignments/A5/Submissions
-dir = /home2/dilawar/Bhandar/assgn5/pdfs
+dir = /home2/dilawar/Bhandar/EE671/assgn5/pdfs
 
 # This is the regular expression of the names of files. If you want to compare
 # all files leave it empty or .* will do. 
@@ -46,7 +46,7 @@ name = difflib
 
 [database]
 # path : Path where sqlite3 database should be saved. 
-path = /home2/dilawar/Bhandar/assgn5/
+path = /home2/dilawar/Bhandar/EE671/assgn5/
 
 # Name of the database.
 name = sniffer.sqlite3 

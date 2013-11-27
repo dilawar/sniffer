@@ -19,7 +19,13 @@ Dependency
 
 Usage 
 =====
+
+Download the folder and unzip in a folder. Inside the folder edit the
+`snifferrc` file and run the following command.
+
   python sniffer.py --config ./snifferrc 
+
+See the following section on how to edit the `snifferrc` file.
 
 Config file 
 ===========
@@ -27,11 +33,13 @@ Config file
     [source]
     # Dir where various folders containing source codes or text files are located.
     # This directory will be 'walked' and each subdirectory inside this directory
-    # will be considered as a separate directory. 
+    # will be considered as belonging to different student. In short, inside
+    # 'dir', each subdirectory will be compared with every other subdirectory.
     dir = /home/dilawar/Works/hpc21/2013ee668/Assignments/A4/Submissions
 
     # This is the regular expression of the names of files. If you want to compare
-    # all files leave it empty or .* will do. 
+    # all files leave it empty or .* will do. In this example, we will only
+    # consider files which are ended with vhdl or vhd extension.
     regex = .*(vhdl|vhd)$
 
     # Specify language of file.
@@ -44,7 +52,7 @@ Config file
     # make compare true if you want to compare. If this is not set to true, it won't
     # match. This is here for development purpose. In most cases, this should be
     # true.
-    compare = false
+    compare = true
 
     # Dump the results of analysis in directory of database.
     analyze_result = true 
@@ -70,9 +78,12 @@ Config file
     name = difflib
 
     [database]
-    # Path where sqlite3 database should be saved.
+    # Path where sqlite3 database should be saved. Generated graphviz files will
+    # be saved to this file only. After match is complete, results are stored in
+    # csv files. identical_severity.csv has the almost matching files followed
+    # by very_high_serverity.csv, high_serverity.csv etc.
     path = /home/dilawar/Works/hpc21/2013ee668/Assignments/A4/db/
 
-    # Name of the database.
+    # Name of the database. Leave it as it is.
     name = sniffer.sqlite3 
     #name = :memory:
