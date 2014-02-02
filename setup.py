@@ -6,8 +6,8 @@ import markdown
 def read(*paths):
     """Build a file path from *paths* and return the contents."""
     with open(os.path.join(*paths), 'r') as f:
-        md = markdown.markdown()
-        return md.covert(f.read())
+        md = markdown.Markdown()
+        return md.convert(f.read())
 
 setup(
         name='sniffer'
@@ -21,7 +21,7 @@ setup(
         , maintainer = 'Dilawar Singh'
         , maintainer_email = 'dilawars@iitb.ac.in'
         , requires = ['Python (>=2.6)']
-        , install_requires = { "sqlite3", "pdfminer"}
+        , install_requires = { "pdfminer"}
         , packages=['sniffer' ]
         , include_package_data = True
         , classifiers = [
