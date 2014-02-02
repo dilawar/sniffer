@@ -18,9 +18,9 @@ Description: <h1>sniffer</h1>
         <li>python-sqlite3</li>
         </ol>
         <h1>Usage</h1>
-        <p>Download the folder and unzip in a folder. Inside the folder edit the
-        <code>snifferrc</code> file and run the following command.</p>
-        <p>python sniffer.py --config ./snifferrc </p>
+        <p>The default path for configuration file is <code>~/.config/sniffer/config</code>. For
+        non-standard location, use <code>--config</code> option.</p>
+        <p>python sniffer.py --config config-file-path</p>
         <p>See the following section on how to edit the <code>snifferrc</code> file.</p>
         <h1>Config file</h1>
         <pre><code>[source]
@@ -77,7 +77,8 @@ Description: <h1>sniffer</h1>
         # by very_high_serverity.csv, high_serverity.csv etc.
         path = /home/dilawar/Works/hpc21/2013ee668/Assignments/A4/db/
         
-        # Name of the database. Leave it as it is.
+        # Name of the database. Leave it as it is. If :memory: is used then database
+        # is build in memory. Untested feature.
         name = sniffer.sqlite3 
         #name = :memory:
         </code></pre><h1>CHANGES</h1>

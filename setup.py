@@ -1,13 +1,11 @@
 import os
 
 from setuptools import setup
-import markdown
 
 def read(*paths):
     """Build a file path from *paths* and return the contents."""
     with open(os.path.join(*paths), 'r') as f:
-        md = markdown.Markdown()
-        return md.convert(f.read())
+        return f.read()
 
 setup(
         name='code-sniffer'
