@@ -20,15 +20,21 @@ Dependency
 Usage 
 =====
 
-The default path for configuration file is `~/.config/sniffer/config`. For
-non-standard location, use `--config` option.
+The default path for configuration file is ``~/.config/sniffer/config``. For
+non-standard location, use ``--config`` option.::
 
-  python sniffer.py --config config-file-path
+  code-sniffer --config config-file-path
+
+If you want to run it from the repository then run the ``run.sh`` file in
+terminal. Make sure you have ``python-pdfmider`` library installed.
+
 
 See the following section on how to edit the `snifferrc` file.
 
 Config file 
 ===========
+
+A sample config file is shown below::
 
     [source]
     # Dir where various folders containing source codes or text files are located.
