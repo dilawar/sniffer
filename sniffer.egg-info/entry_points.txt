@@ -1,4 +1,4 @@
 
         [console_scripts]
-        sniffer=sniffer.main
+        sniffer=sniffer.main:main
         

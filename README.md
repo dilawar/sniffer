@@ -20,10 +20,10 @@ Dependency
 Usage 
 =====
 
-Download the folder and unzip in a folder. Inside the folder edit the
-`snifferrc` file and run the following command.
+The default path for configuration file is `~/.config/sniffer/config`. For
+non-standard location, use `--config` option.
 
-  python sniffer.py --config ./snifferrc 
+  python sniffer.py --config config-file-path
 
 See the following section on how to edit the `snifferrc` file.
 
@@ -84,6 +84,7 @@ Config file
     # by very_high_serverity.csv, high_serverity.csv etc.
     path = /home/dilawar/Works/hpc21/2013ee668/Assignments/A4/db/
 
-    # Name of the database. Leave it as it is.
+    # Name of the database. Leave it as it is. If :memory: is used then database
+    # is build in memory. Untested feature.
     name = sniffer.sqlite3 
     #name = :memory:
