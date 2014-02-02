@@ -10,7 +10,7 @@ def read(*paths):
         return md.convert(f.read())
 
 setup(
-        name='sniffer'
+        name='code-sniffer'
         , version='0.9.0'
         , description='A command-line tool to check plagiarim in text and pdf'
         , long_description= read('README.md') + read('CHANGES.md')
@@ -35,7 +35,7 @@ setup(
             ],
         entry_points="""
         [console_scripts]
-        sniffer=sniffer.main:main
+        code-sniffer=sniffer.main:main
         """
         )
 
