@@ -1,13 +1,14 @@
-sniffer
-=======
+About
+-----
 
-Code sniffer to check the similarity between text files. Works well with
-programming languages although the pdf are also supported.
+This program is intended to be used to check plagiarism in assignments. It is a
+poor man's `MOSS<http://theory.stanford.edu/~aiken/moss/>`_.
 
 Status 
 ======
  
-  Under development. 
+  Under development but can be used. Report bugs on it `github
+  page<http://github.com/dilawar/sniffer>`_.
 
 Dependency 
 =========
@@ -34,13 +35,16 @@ See the following section on how to edit the `snifferrc` file.
 Config file 
 ===========
 
-A sample config file is shown below::
+A sample config file is shown below
 
+::
     [source]
-    # Dir where various folders containing source codes or text files are located.
-    # This directory will be 'walked' and each subdirectory inside this directory
-    # will be considered as belonging to different student. In short, inside
-    # 'dir', each subdirectory will be compared with every other subdirectory.
+
+    # This is main directory.
+    # This directory contains folders. Each folder is compared against every
+    # other folder.
+    # Each folder is walked and files matching `regex` are collected. These
+    # files will be compared.
     dir = /home/dilawar/Works/hpc21/2013ee668/Assignments/A4/Submissions
 
     # This is the regular expression of the names of files. If you want to compare
@@ -49,29 +53,28 @@ A sample config file is shown below::
     regex = .*(vhdl|vhd)$
 
     # Specify language of file.
-    # Available : vhdl, verilog, ctype, text, pdf 
+    # Available : vhdl, verilog, ctype, text, pdf. If in doubt make it text.
+    # Further support to be added to other languages as well. 
     language = vhdl
 
-    # Compiler. Currently this is of no use.
-    compiler = ghdl
-
-    # make compare true if you want to compare. If this is not set to true, it won't
+    # Make compare true if you want to compare. If this is not set to true, it won't
     # match. This is here for development purpose. In most cases, this should be
     # true.
     compare = true
 
-    # Dump the results of analysis in directory of database.
+    # Dump the results of analysis in directory of `database`.
     analyze_result = true 
 
     # Currently useless.
     send_email = false
 
     [filter]
-    # If this regex is found in the text of file, then the file is ignored. 
+    # If this regex is found in the text of file, then the file is ignored. The
+    # format of regex is defined in python re library.
     regex = ((Madhav\s+Desai)|(entity\s+(reg|\w*mux\w*|unsigned\_(comparator|adder)|mux\dto\d|decoder\dto\d|Datapath)\s+is)|(operand1.+operand2.+result.+overflow)|(data\_in.+data\_out.+clock))
     regex_flags = DOTALL,IGNORECASE 
 
-    # larger size will be ignored. -1 for all. In Kb
+    # larger than this size will be ignored. -1 for all. In Kb
     max_size = -1
 
     # Max words a text file can contains. -1 for 2^32.
@@ -80,7 +83,8 @@ A sample config file is shown below::
     min_words = 100
 
     [algorithm]
-    # Available algoritms : difflib, quick, 
+    # Available algoritms : difflib, quick, . Quick is not available in this
+    # relase. So leave it unchanged.
     name = difflib
 
     [database]
