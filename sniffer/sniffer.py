@@ -5,8 +5,8 @@ import argparse
 import database
 import compare
 
-if __name__ == "__main__" :
 
+def main():
   parser = argparse.ArgumentParser(description="This is code sniffer.")
   parser.add_argument('--config'
           , metavar='filepath'
@@ -32,3 +32,8 @@ if __name__ == "__main__" :
   if config.get("source", "analyze_result") == "true" :
       database.writeContent(config, db)
       database.genrateDOT(config, db)
+
+
+
+if __name__ == "__main__" :
+    return main()
