@@ -35,7 +35,7 @@ setup(
             ],
         entry_points="""
         [console_scripts]
-        twordpress=sniffer:sniffer
+        sniffer=sniffer.main
         """
         )
 
