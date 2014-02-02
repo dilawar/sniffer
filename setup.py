@@ -35,7 +35,7 @@ setup(
             ],
         entry_points="""
         [console_scripts]
-        sniffer=sniffer.main
+        sniffer=sniffer.main:main
         """
         )
 
