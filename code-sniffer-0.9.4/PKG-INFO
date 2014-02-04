@@ -1,0 +1,42 @@
+Metadata-Version: 1.1
+Name: code-sniffer
+Version: 0.9.4
+Summary: A command-line tool to check plagiarim in text and pdf
+Home-page: https://dilawar.github.io/sniffer
+Author: Dilawar Singh
+Author-email: dilawars@iitb.ac.in
+License: GNU-GPL
+Description: About
+        -----
+        
+        This program is intended to be used to check plagiarism in assignments. It is a
+        poor man's `MOSS <http://theory.stanford.edu/~aiken/moss/>`_.
+        
+        Usage 
+        =====
+        
+        See the project page for more details. `Project page <http://dilawar.github.io/sniffer>`_.
+        
+        CHANGES
+        =======
+        
+        Sun Feb  2 19:52:43 2014 
+        
+        - Wrote the package for pypi.
+        
+        Wed 05 Feb 2014 04:49:43 AM IST
+        
+        - Added ignore_text support. One need not specify regular expressions anymore in
+          [filter] section
+        - File extension are not a regex anymore. It is a comma separated list
+        
+        
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Environment :: Console
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Requires: Python (>=2.6)
