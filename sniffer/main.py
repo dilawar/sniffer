@@ -29,9 +29,8 @@ def main():
     config = cfg.ConfigParser()
     config.read(configFile)
     db = database.buildListingDb(config)
-    if config.get("source", "compare") == "true" :
-        compare.compare(config, db)
-        database.dump(config, db)
+    compare.compare(config, db)
+    database.dump(config, db)
     if config.get("source", "analyze_result") == "true" :
         database.writeContent(config, db)
         database.genrateDOT(config, db)
