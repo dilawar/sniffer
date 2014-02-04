@@ -31,9 +31,15 @@ def main():
     db = database.buildListingDb(config)
     compare.compare(config, db)
     database.dump(config, db)
-    if config.get("source", "analyze_result") == "true" :
+    try:
+        dumpResult = config.get("source", "dump_result")
+    except Exception as e:
         database.writeContent(config, db)
         database.genrateDOT(config, db)
+    if dumpResult == "true":
+        database.writeContent(config, db)
+        database.genrateDOT(config, db)
+    else: pass
   
     
 if __name__ == "__main__" :

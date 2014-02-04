@@ -1,2 +1,4 @@
 #!/bin/bash
-python ./sniffer/main.py 
+python setup.py build
+sudo python setup.py install
+code-sniffer

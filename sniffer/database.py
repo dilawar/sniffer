@@ -5,31 +5,32 @@ import algorithm
 import sys
 
 inMemDb = sql.connect(":memory:")
+dbName = 'sniffer.sqlite3'
 
 def buildListingDb(config) :
-  dbPath = config.get('database', 'path')
-  dbName = config.get('database', 'name')
-  iscomparing = config.get('source', 'compare')
-  print("[I] Creating db in {0}".format(dbPath))
-  try :
-    os.makedirs(dbPath) 
-  except OSError as exception :
-    if exception.errno != errno.EEXIST :
-      raise 
-  if dbName != ":memory:" :
-    dbfile = os.path.join(dbPath, dbName)
-    if os.path.exists(dbfile) :
-      if iscomparing == "true" : 
-        os.rename(dbfile, dbfile+time.strftime("%Y%m%d%H%M%S"))
-      else :
-        pass 
-    db = sql.connect(dbfile)
-  else :
-    db = sql.connect(dbName)
+    global dbName
+    dbPath = config.get('database', 'path')
+    iscomparing = True
+    print("[I] Creating db in {0}".format(dbPath))
+    try :
+        os.makedirs(dbPath) 
+    except OSError as exception :
+        if exception.errno != errno.EEXIST :
+            raise 
+    if dbName != ":memory:" :
+      dbfile = os.path.join(dbPath, dbName)
+      if os.path.exists(dbfile) :
+        if iscomparing: 
+          os.rename(dbfile, dbfile+time.strftime("%Y%m%d%H%M%S"))
+        else :
+          pass 
+      db = sql.connect(dbfile)
+    else :
+      db = sql.connect(dbName)
 
-  db = initializeDb(db)
-  db = populateDB(config, db)
-  return db
+    db = initializeDb(db)
+    db = populateDB(config, db)
+    return db
 
 def initializeDb(db) :
   # It should be create every time.
@@ -78,7 +79,13 @@ def populateDB(config, db) :
   import re
   c = db.cursor()
   dir = config.get('source', 'dir')
-  regex = config.get('source', 'regex')
+  extension = config.get('source', 'extension')
+  if not extension:
+      print("No field extension under [source] section. Existing...")
+      sys.exit(0)
+
+  extension = extension.split(',')
+  regex = r".*?\.({})$".format('|'.join(extension))
   if len(regex.strip()) == 0 :
     regex = ".*"
   pat = re.compile(regex, re.IGNORECASE)
@@ -108,11 +115,12 @@ def populateDB(config, db) :
   return db 
 
 def writeContent(config, db) :
+  global dbName
   path = config.get('database', 'path')
   srcdir = config.get('source', 'dir')
   srcdir = srcdir.strip("/")
   srcdir += "/"
-  name = config.get('database', 'name')
+  name = dbName
   dbPath = os.path.join(path, name)
   if name == ":memory:" : 
     print("[I] Loading db from memory dump ")
@@ -144,8 +152,9 @@ def writeContent(config, db) :
   generateSummary(config, db)
 
 def dump(config, db) :
+  global dbName
   path = config.get('database', 'path')
-  name = config.get('database', 'name')
+  name = dbName
   if name == ":memory:" :
     print("[I] Dumping the in memory database to a file : {0}".format(fileToDump))
     # dump it 
