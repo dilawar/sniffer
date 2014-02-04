@@ -9,7 +9,7 @@ def read(*paths):
 
 setup(
         name='code-sniffer'
-        , version='0.9.3'
+        , version='0.9.4'
         , description='A command-line tool to check plagiarim in text and pdf'
         , long_description= read('README.rst') + read('CHANGES.rst')
         , url = 'https://dilawar.github.io/sniffer'
