@@ -7,5 +7,5 @@ poor man's `MOSS <http://theory.stanford.edu/~aiken/moss/>`_.
 Usage 
 =====
 
-See the project page for more details. `Project page <http://dilawar.githhub.io/sniffer>`_.
+See the project page for more details. `Project page <http://dilawar.github.io/sniffer>`_.
 
