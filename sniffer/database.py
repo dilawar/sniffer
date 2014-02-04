@@ -3,6 +3,7 @@ import os, errno
 import time
 import algorithm 
 import sys
+import re
 
 inMemDb = sql.connect(":memory:")
 dbName = 'sniffer.sqlite3'
@@ -76,43 +77,39 @@ def initializeDb(db) :
 
 
 def populateDB(config, db) :
-  import re
-  c = db.cursor()
-  dir = config.get('source', 'dir')
-  extension = config.get('source', 'extension')
-  if not extension:
-      print("No field extension under [source] section. Existing...")
+    c = db.cursor()
+    dir = config.get('source', 'dir')
+    extension = config.get('source', 'extension')
+    if len(extension.strip()) == 0 :
+        regex = ".*"
+    else:
+        extension = [x.strip() for x in extension.split(',')]
+        regex = r".*?\.({})$".format('|'.join(extension))
+    pat = re.compile(regex, re.IGNORECASE)
+    if not os.path.exists(dir) :
+      print("[E] source dir does not exists. Check config file.")
       sys.exit(0)
-
-  extension = extension.split(',')
-  regex = r".*?\.({})$".format('|'.join(extension))
-  if len(regex.strip()) == 0 :
-    regex = ".*"
-  pat = re.compile(regex, re.IGNORECASE)
-  if not os.path.exists(dir) :
-    print("[E] source dir does not exists. Check config file.")
-    sys.exit(0)
-  countFile = 0
-  for root, dirs, files in os.walk(dir) :
-    for file in files :
-      if pat.match(file) :
-        countFile += 1
-        fileName = file 
-        filePath = os.path.join(root, file)
-        if not os.path.exists(filePath) :
-          print("[W] Something weired has happened. {0} does not \
-              exists".format(filePath))
-          return 
-        sizeOfFile = os.path.getsize(filePath)
-        owner = root.replace(dir, "")
-        owner = owner.strip("/")
-        owner = owner.split("/")[0]
-        query = '''INSERT INTO listings (name, root, size, type, owner)
-            VALUES (?, ?, ?, ?, ?)'''
-        c.execute(query, (fileName, root, sizeOfFile, regex, owner))
-  db.commit()
-  print("[I] Total {0} programs".format(countFile))
-  return db 
+    countFile = 0
+    for root, dirs, files in os.walk(dir) :
+      for file in files :
+        if pat.match(file) :
+          countFile += 1
+          fileName = file 
+          filePath = os.path.join(root, file)
+          if not os.path.exists(filePath) :
+            print("[W] Something weired has happened. {0} does not \
+                exists".format(filePath))
+            return 
+          sizeOfFile = os.path.getsize(filePath)
+          owner = root.replace(dir, "")
+          owner = owner.strip("/")
+          owner = owner.split("/")[0]
+          query = '''INSERT INTO listings (name, root, size, type, owner)
+              VALUES (?, ?, ?, ?, ?)'''
+          c.execute(query, (fileName, root, sizeOfFile, regex, owner))
+    db.commit()
+    print("[I] Total {0} programs".format(countFile))
+    return db 
 
 def writeContent(config, db) :
   global dbName
