@@ -1,4 +1,0 @@
-
-        [console_scripts]
-        code-sniffer=sniffer.main:main
-        
