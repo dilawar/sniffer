@@ -4,79 +4,163 @@ import os
 import algorithm
 import database
 import datetime
+import sys
 
 def findListingsToCompare(config, db) :
-  listings = dict()
-  c = db.cursor()
-  query = '''SELECT DISTINCT owner FROM listings '''
-  users = c.execute(query).fetchall()
-  print("[I] Total {0} distint owner of files ".format(len(users)))
-  # Now for each of these students fetch their files.
-  for user in users :
-    query = '''SELECT name, root, size FROM listings WHERE owner=?
-              ORDER BY name DESC '''
-    files = c.execute(query, (user)).fetchall()
-    listings[user] = files
-  newListings = filterListing(config, listings)
-  oldNum = sum([len(i) for i in listings.itervalues()])
-  newNum = sum([len(i) for i in newListings.itervalues()])
-  print("[I] Total {0} files filtered.".format(oldNum - newNum))
-  return newListings
+    listings = dict()
+    c = db.cursor()
+    query = '''SELECT DISTINCT owner FROM listings '''
+    users = c.execute(query).fetchall()
+    print("[I] Total {0} distint owner of files ".format(len(users)))
+    # Now for each of these students fetch their files.
+    for user in users :
+      query = '''SELECT name, root, size FROM listings WHERE owner=?
+                ORDER BY name DESC '''
+      files = c.execute(query, (user)).fetchall()
+      listings[user] = files
+    newListings = filterListing(config, listings)
+    oldNum = sum([len(i) for i in listings.itervalues()])
+    newNum = sum([len(i) for i in newListings.itervalues()])
+    print("[I] Total {0} files filtered.".format(oldNum - newNum))
+    return newListings
 
-def filterListing(config, listings) :
-  max_size = int(config.get('filter', 'max_size'))
-  if max_size == -1 :
-    max_size = pow(2,32)
-  else :
-    max_size = max_size*1024
+def filterListing(config, listings):
+    params = {}
+    try:
+        max_size = int(config.get('filter', 'max_size'))
+    except Exception as e:
+        max_size = -1
 
-  min_words = int(config.get('filter', 'min_words'))
-  max_words = int(config.get('filter', 'max_words'))
-  regex = config.get('filter', 'regex')
-  regex_flags = config.get('filter', 'regex_flags')
-  if max_words == -1 :
-    max_words = pow(2,32)
-  ignorecase = False
-  dotall = False
-  if regex_flags.upper().find("IGNORECASE") != -1 :
-    ignorecase = True
-  if regex_flags.upper().find("DOTALL") != -1 :
-    dotall = True
+    if max_size == -1 :
+        max_size = pow(2,32)
+    else :
+        max_size = max_size*1024
 
-  if dotall and ignorecase :
-    pat = re.compile(regex, re.IGNORECASE | re.DOTALL)
-  elif dotall and not ignorecase :
-    pat = re.compile(regex, re.DOTALL)
-  elif not dotall and ignorecase :
-    pat = re.compile(regex, re.IGNORECASE)
-  elif dotall and not ignorecase :
-    pat = re.compile(regex, re.DOTALL)
-  elif not dotall and not ignorecase :
-    pat = re.compile(regex)
+    params['max_size'] = max_size
+  
+    try:
+        min_words = int(config.get('filter', 'min_words'))
+    except Exception as e:
+        min_words = 1
+    params['min_words'] = min_words
 
-  newListings = dict()
-  for user in listings :
-    newFiles = list()
-    files = listings[user]
-    for file in files :
-      name, root, size = file
-      filePath = os.path.join(root, name)
-      fileSize = int(size)
-      with open(filePath, "r") as f :
-        txt = f.read()
-      nw = txt.split()
-      if size > max_size :
-        print('[FILTER] Ignored due to large size : {0}'.format(name))
-      elif len(nw) < min_words :
-        print('[FILTER] Ignored, few words {1} : {0}'.format(name, len(nw)))
-      elif len(nw) > max_words :
-        print('[FILTER] Ignored, too-many words {1}: {0}'.format(name, len(nw)))
-      elif pat.search(txt) :
-        print("[FILTER] Ignoring because regex is found : {0}.".format(name))
-      else :
-        newFiles.append(file)
-    newListings[user] = newFiles
-  return newListings
+    try:
+        max_words = int(config.get('filter', 'max_words'))
+    except Exception as e:
+        max_words = -1
+    
+    if max_words == -1 :
+        max_words = pow(2,32)
+    params['max_words'] = max_words
+
+    totalRegex = []
+
+    try:
+        regex = config.get('filter', 'regex')
+        try:
+            regex_flags = config.get('filter', 'regex_flags')
+        except Exception as e:
+            regex_flags = ""
+        ignorecase = False
+        dotall = False
+        if regex_flags.upper().find("IGNORECASE") != -1 :
+            ignorecase = True
+        if regex_flags.upper().find("DOTALL") != -1 :
+            dotall = True
+        totalRegex.append([regex, dotall, ignorecase])
+        #listings = ignoreRegex(regex, dotall, ignorecase, listings, params)
+    except Exception as e: pass
+
+    try:
+        ignoreText = config.get('filter', 'ignore_text')
+        regex, dotall = textPatterToRegex(ignoreText)
+        totalRegex.append([regex, dotall, False])
+        #listings = ignoreRegex(regex, dotall, False, listings, params)
+    except Exception as e:
+        print("No ignore text")
+        sys.exit()
+        
+    return ignoreRegex(totalRegex, listings, params)
+
+def textPatterToRegex(textPattern):
+    """ Convert a language of text-patter to regex
+     A list of text which if found in file then reject the file. 
+     textA >> textB; reject file if  textA is followed by textB
+     textA || textB; reject file if textA or textB is found.
+     textA && textB; reject if both text are found.
+    """
+    if ">>" in textPattern:
+        pat = [x.strip() for x in textPattern.split(">>")]
+        pat = [re.sub(r'\s+', '\s+', x) for x in pat]
+        regex = ".*?".join(pat)
+        return (regex, True)
+    elif "||" in textPattern:
+        pat = [x.strip() for x in textPattern.split("||")]
+        pat = [re.sub(r'\s+', '\s+', x) for x in pat]
+        regex = "|".join(pat)
+        return regex, False
+    elif "&&" in textPattern:
+        pat = [x.strip() for x in textPattern.split("&&")]
+        pat = [re.sub(r'\s+', '\s+', x) for x in pat]
+        regex1 = ".*?".join(pat)
+        regex2 = ".*?".join(reversed(pat))
+        regex = r"({})|({})".format(regex1, regex2)
+        return regex, True
+    else: 
+        pat = textPattern.strip()
+        pat = re.sub(r'\s+', '\s+', pat)
+        return pat, False
+
+def compileRegex(regexL):
+    """Compile a given regex list """
+    regex, dotall, ignorecase = regexL
+    if dotall and ignorecase :
+        pat = re.compile(regex, re.IGNORECASE | re.DOTALL)
+    elif dotall and not ignorecase :
+        pat = re.compile(regex, re.DOTALL)
+    elif not dotall and ignorecase :
+        pat = re.compile(regex, re.IGNORECASE)
+    elif dotall and not ignorecase :
+        pat = re.compile(regex, re.DOTALL)
+    elif not dotall and not ignorecase :
+        pat = re.compile(regex)
+    else:
+        pat.re.compile(regex)
+    return pat
+  
+
+def ignoreRegex(regexList, listings, params):
+    newListings = dict()
+    for user in listings :
+        newFiles = list()
+        files = listings[user]
+        for file in files :
+            name, root, size = file
+            filePath = os.path.join(root, name)
+            fileSize = int(size)
+            with open(filePath, "r") as f:
+                txt = f.read()
+            nw = txt.split()
+            if size > params['max_size']:
+                print('[FILTER] Large size : {0}'.format(name))
+            elif len(nw) < params['min_words']:
+                print('[FILTER] Few words {1} : {0}'.format(name, len(nw)))
+            elif len(nw) > params['max_words'] :
+                print('[FILTER] Too-many words {1}: {0}'.format(name, len(nw)))
+            elif len(regexList) > 0:
+                regexFound = False
+                for rl in regexList:
+                    pat = compileRegex(rl)
+                    if pat.search(txt):
+                        print("[FILTER] Ignore pattern found : {0}.".format(name))
+                        regexFound = True
+                        break
+                if not regexFound:
+                    newFiles.append(file)
+            else:
+                newFiles.append(user)
+        newListings[user] = newFiles
+    return newListings
 
 
 def compare(config, db) :
