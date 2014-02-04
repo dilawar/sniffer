@@ -11,7 +11,7 @@ setup(
         name='code-sniffer'
         , version='0.9.1'
         , description='A command-line tool to check plagiarim in text and pdf'
-        , long_description= read('README.md') + read('CHANGES.md')
+        , long_description= read('README.rst') + read('CHANGES.rst')
         , url = 'https://github.com/dilawar/sniffer'
         , licence = 'GNU-GPL'
         , author = 'Dilawar Singh'
