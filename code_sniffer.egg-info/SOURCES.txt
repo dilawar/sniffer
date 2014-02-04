@@ -1,0 +1,17 @@
+README.rst
+setup.py
+code_sniffer.egg-info/PKG-INFO
+code_sniffer.egg-info/SOURCES.txt
+code_sniffer.egg-info/dependency_links.txt
+code_sniffer.egg-info/entry_points.txt
+code_sniffer.egg-info/requires.txt
+code_sniffer.egg-info/top_level.txt
+sniffer/algorithm.py
+sniffer/compare.py
+sniffer/database.py
+sniffer/lang_ctype.py
+sniffer/lang_pdf.py
+sniffer/lang_verilog.py
+sniffer/lang_vhdl.py
+sniffer/main.py
+sniffer/save_emails.py
