@@ -7,11 +7,9 @@ import re
 
 inMemDb = sql.connect(":memory:")
 dbName = 'sniffer.sqlite3'
-dbPath = ''
 
 def buildListingDb(config) :
     global dbName
-    global dbPath
     dbPath = config.get('database', 'path')
     iscomparing = True
     print("[I] Creating db in {0}".format(dbPath))
@@ -79,7 +77,6 @@ def initializeDb(db) :
 
 
 def populateDB(config, db) :
-    global dbPath
     c = db.cursor()
     dir = config.get('source', 'dir')
     extension = config.get('source', 'extension')
@@ -116,12 +113,12 @@ def populateDB(config, db) :
 
 def writeContent(config, db):
     global dbName
-    global dbPath
     path = config.get('database', 'path')
     srcdir = config.get('source', 'dir')
     srcdir = srcdir.strip("/")
     srcdir += "/"
     name = dbName
+    dbPath = path
     db = sql.connect(dbPath)
     c = db.cursor()
     serverity = ["mild", "moderate", "high", "veryhigh", "identical"]
@@ -215,13 +212,13 @@ def genrateDOT(config, db) :
                  , num_matches, color)
        dotLines.append((avg, line)) 
     
-   [writeToGraphviz(x, users, dotLines, standAlone=True) 
+   [writeToGraphviz(config, x, users, dotLines, standAlone=True) 
             for x in ["summary", "convicted", "accused"]]
 
 
-def writeToGraphviz(filename, users, dotLines, standAlone):
-    global dbPath
+def writeToGraphviz(config, filename, users, dotLines, standAlone):
     global dbName
+    dbPath = config.get("database", "path")
     path = os.path.join(dbPath, filename+".sh")
     with open(path, "w") as f:
         header = "#!/bin/bash\n"
