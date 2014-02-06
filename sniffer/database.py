@@ -192,7 +192,7 @@ def genrateDOT(config, db) :
    users = set()
    dotLines = []
    c = db.cursor()
-   print("[STEP]", "Generating graphs from summary ..."),
+   print("[STEP] %s" % "Generating graphs from summary ..."),
    summary = c.execute('SELECT * FROM summary').fetchall()
    for s in summary:
        userA, userB, num_matches, avg = s
