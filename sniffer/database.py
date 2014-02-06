@@ -7,9 +7,11 @@ import re
 
 inMemDb = sql.connect(":memory:")
 dbName = 'sniffer.sqlite3'
+dbPath = ''
 
 def buildListingDb(config) :
     global dbName
+    global dbPath
     dbPath = config.get('database', 'path')
     iscomparing = True
     print("[I] Creating db in {0}".format(dbPath))
@@ -34,49 +36,50 @@ def buildListingDb(config) :
     return db
 
 def initializeDb(db) :
-  # It should be create every time.
-  c = db.cursor()
-  query = 'DROP TABLE IF EXISTS listings'
-  c.execute(query)
-
-  query = ''' CREATE TABLE listings (
-            name VARCHAR NOT NULL 
-            , owner VARCHAR 
-            , root VARCHAR NOT NULL 
-            , type VARCHAR
-            , size INT NOT NULL 
-            , lines INT 
-            , status VARCHAR
-            , PRIMARY KEY(root, name))'''
-  c.execute(query)
-
-  query = '''CREATE TABLE IF NOT EXISTS match (
-            userA VARCHAR NOT NULL 
-            , fileA VARCHAR NOT NULL
-            , userB VARCHAR NOT NULL
-            , fileB VARCHAR NOT NULL 
-            , match REAL NOT NULL 
-            , algorithm VARCHAR 
-            , result VARCHAR
-            , PRIMARY KEY(fileA, fileB, algorithm))
-            '''
-  c.execute(query)
-
-  c.execute('DROP TABLE IF EXISTS summary')
+    # It should be create every time.
+    c = db.cursor()
+    query = 'DROP TABLE IF EXISTS listings'
+    c.execute(query)
   
-  query = '''CREATE TABLE IF NOT EXISTS summary (
-    userA VARCHAR NOT NULL
-    , userB VARCHAR NOT NULL 
-    , num_matches INT default '1'
-    , avg_index REAL default '0.0'
-    , PRIMARY KEY(userA, userB) 
-    ) '''
-  c.execute(query)
-  db.commit()
-  return db
+    query = ''' CREATE TABLE listings (
+              name VARCHAR NOT NULL 
+              , owner VARCHAR 
+              , root VARCHAR NOT NULL 
+              , type VARCHAR
+              , size INT NOT NULL 
+              , lines INT 
+              , status VARCHAR
+              , PRIMARY KEY(root, name))'''
+    c.execute(query)
+  
+    query = '''CREATE TABLE IF NOT EXISTS match (
+              userA VARCHAR NOT NULL 
+              , fileA VARCHAR NOT NULL
+              , userB VARCHAR NOT NULL
+              , fileB VARCHAR NOT NULL 
+              , match REAL NOT NULL 
+              , algorithm VARCHAR 
+              , result VARCHAR
+              , PRIMARY KEY(fileA, fileB, algorithm))
+              '''
+    c.execute(query)
+  
+    c.execute('DROP TABLE IF EXISTS summary')
+    
+    query = '''CREATE TABLE IF NOT EXISTS summary (
+      userA VARCHAR NOT NULL
+      , userB VARCHAR NOT NULL 
+      , num_matches INT default '1'
+      , avg_index REAL default '0.0'
+      , PRIMARY KEY(userA, userB) 
+      ) '''
+    c.execute(query)
+    db.commit()
+    return db
 
 
 def populateDB(config, db) :
+    global dbPath
     c = db.cursor()
     dir = config.get('source', 'dir')
     extension = config.get('source', 'extension')
@@ -111,55 +114,36 @@ def populateDB(config, db) :
     print("[I] Total {0} programs".format(countFile))
     return db 
 
-def writeContent(config, db) :
-  global dbName
-  path = config.get('database', 'path')
-  srcdir = config.get('source', 'dir')
-  srcdir = srcdir.strip("/")
-  srcdir += "/"
-  name = dbName
-  dbPath = os.path.join(path, name)
-  if name == ":memory:" : 
-    print("[I] Loading db from memory dump ")
-    dbPath = os.path.join(path, "sniffer.sqlite3")
-    db = sqlite.connect("")
-    db.execute('.read {0}'.format(dbPath))
-
-  db = sql.connect(dbPath)
-  c = db.cursor()
-  serverity = ["mild", "moderate", "high", "veryhigh", "identical"]
-  for s in serverity :
-    print("Fetching cases with serverity : {0}".format(s))
-    query = '''SELECT userA, userB, fileA, fileB, match FROM match WHERE result=?'''
-    with open(os.path.join(path, s+"_serverity.csv"), "w") as f :
-      rows = c.execute(query, (s,)).fetchall()
-      for row in rows :
-        userA, userB, fileA, fileB, match = row 
-        prefix = algorithm.commonPrefix(fileA, dbPath)
-        outLevel = len(path.replace(prefix, "")) - 1
-        prefixFile = ""
-        for p in xrange(1, outLevel) :
-          prefixFile += "../"
-        fileA = prefixFile+fileA.replace(prefix, "")
-        fileB = prefixFile+fileB.replace(prefix, "")
-
-        #fileA = fileA.replace(srcdir, "").strip("/")
-        #fileB = fileB.replace(srcdir, "").strip("/")
-        f.write("\"{0}\",\"{1}\",\"{2}\"\n".format(match,fileA, fileB))
-  generateSummary(config, db)
-
-def dump(config, db) :
-  global dbName
-  path = config.get('database', 'path')
-  name = dbName
-  if name == ":memory:" :
-    print("[I] Dumping the in memory database to a file : {0}".format(fileToDump))
-    # dump it 
-    fileToDump = os.path.join(path, "sniffer.sqlite3")
-    with open(fileToDump, 'w') as f :
-      for line in db.iterdump() :
-        f.write('%s\n' % line)
-  else : return 
+def writeContent(config, db):
+    global dbName
+    global dbPath
+    path = config.get('database', 'path')
+    srcdir = config.get('source', 'dir')
+    srcdir = srcdir.strip("/")
+    srcdir += "/"
+    name = dbName
+    db = sql.connect(dbPath)
+    c = db.cursor()
+    serverity = ["mild", "moderate", "high", "veryhigh", "identical"]
+    for s in serverity :
+      print("Fetching cases with serverity : {0}".format(s))
+      query = '''SELECT userA, userB, fileA, fileB, match FROM match WHERE result=?'''
+      with open(os.path.join(path, s+"_serverity.csv"), "w") as f :
+        rows = c.execute(query, (s,)).fetchall()
+        for row in rows :
+          userA, userB, fileA, fileB, match = row 
+          prefix = algorithm.commonPrefix(fileA, dbPath)
+          outLevel = len(path.replace(prefix, "")) - 1
+          prefixFile = ""
+          for p in xrange(1, outLevel) :
+            prefixFile += "../"
+          fileA = prefixFile+fileA.replace(prefix, "")
+          fileB = prefixFile+fileB.replace(prefix, "")
+  
+          #fileA = fileA.replace(srcdir, "").strip("/")
+          #fileB = fileB.replace(srcdir, "").strip("/")
+          f.write("\"{0}\",\"{1}\",\"{2}\"\n".format(match,fileA, fileB))
+    generateSummary(config, db)
 
 def generateSummary(config, db) :
   #global inMemDb
@@ -207,18 +191,39 @@ def generateSummary(config, db) :
   db.commit()
 
 def genrateDOT(config, db) : 
-  #global inMemDb
-  c = db.cursor()
-  dbPath = config.get("database", "path")
-  summaryName = "summary"
-  convictedName = "convicted"
-  accusedName = "accused"
-  path = os.path.join(dbPath, summaryName+".sh")
-  print("Generating graphs from summary ..."),
-  summary = c.execute('SELECT * FROM summary').fetchall()
-  with open(path, "w") as f :
-    with open(dbPath+"/"+convictedName+".sh", "w") as highF :
-      with open(dbPath+"/"+accusedName+".sh", "w") as medF :
+   #global inMemDb
+   users = set()
+   dotLines = []
+   c = db.cursor()
+   print("[STEP]", "Generating graphs from summary ..."),
+   summary = c.execute('SELECT * FROM summary').fetchall()
+   for s in summary:
+       userA, userB, num_matches, avg = s
+       users.add(userA)
+       users.add(userB)
+       penwidth = (avg+0.5)*(avg+0.5)
+       if avg > 0.0 :
+         color = "#ffff00"
+       if avg > 0.5 :
+         color = "#ffa000" 
+       if avg > 0.6 :
+         color = "blue"
+       if avg > 0.7 :
+         color = "red"
+       line = ("\n\t\"{0}\" -- \"{1}\" [penwidth={2} color=\"{4}\""+
+             " label=\"{3}\" fontsize=7.0];").format(userA, userB, penwidth
+                 , num_matches, color)
+       dotLines.append((avg, line)) 
+    
+   [writeToGraphviz(x, users, dotLines, standAlone=True) 
+            for x in ["summary", "convicted", "accused"]]
+
+
+def writeToGraphviz(filename, users, dotLines, standAlone):
+    global dbPath
+    global dbName
+    path = os.path.join(dbPath, filename+".sh")
+    with open(path, "w") as f:
         header = "#!/bin/bash\n"
         header += "\n# Bash script to generate graph\n"
         header += "\ngraph=$(cat <<GRAPHEND"
@@ -227,39 +232,28 @@ def genrateDOT(config, db) :
         header += "\n\tfontsize=10.0;";
         header += "\n\toverlap=false ;\n\tspline=true; \n\tnodesep=4.0;"
         f.write(header)
-        highF.write(header)
-        medF.write(header)
-        for s in summary :
-          userA, userB, num_matches, avg = s
-          penwidth = (avg+0.5)*(avg+0.5)
-          if avg > 0.0 :
-            color = "#ffff00"
-          if avg > 0.5 :
-            color = "#ffa000" 
-          if avg > 0.6 :
-            color = "blue"
-          if avg > 0.7 :
-            color = "red"
-
-          line = ("\n\t\"{0}\" -- \"{1}\" [penwidth={2} color=\"{4}\""+
-                " label=\"{3}\" fontsize=7.0];").format(userA, userB, penwidth
-                    , num_matches, color)
-          f.write(line)
-          if avg >= 0.60  :
-            highF.write(line)
-          if avg >= 0.45 :
-            medF.write(line)
+        # Write names of all students as nodes.
+        for user in users:
+            f.write("{}\n".format(user))
+        if "convicted" in filename:
+            writeLines(f, dotLines, 0.60)
+        elif "accused" in filename:
+            writeLines(f, dotLines, 0.60)
+        elif "summary" in filename:
+            writeLines(f, dotLines, 0.10)
+        else: pass
         endLine = "\n}\n"
         endLine += "GRAPHEND\n"
         endLine += ")\n"
         f.write(endLine)
-        medF.write(endLine)
-        highF.write(endLine)
-
         endLine = "echo $graph > .temp.dot \n"
         endLine += "neato -Tps -o{0} .temp.dot \n"
         endLine += "rm -f .temp.dot\n"
+        f.write(endLine.format(filename+".ps"))
 
-        f.write(endLine.format(summaryName+".ps"))
-        highF.write(endLine.format(convictedName+".ps"))
-        medF.write(endLine.format(accusedName+".ps"))
+def writeLines(fileH, lines, threshold):
+    """ Write given lines to file when avg is greater than threshold """
+    for avg, line in lines:
+        if avg >= threshold:
+            fileH.write(line)
+        else: pass
