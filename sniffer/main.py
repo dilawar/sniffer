@@ -30,7 +30,6 @@ def main():
     config.read(configFile)
     db = database.buildListingDb(config)
     compare.compare(config, db)
-    database.dump(config, db)
     try:
         dumpResult = config.get("source", "dump_result")
     except Exception as e:
