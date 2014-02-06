@@ -118,7 +118,7 @@ def writeContent(config, db):
     srcdir = srcdir.strip("/")
     srcdir += "/"
     name = dbName
-    dbPath = path
+    dbPath = os.path.join(path, dbName)
     db = sql.connect(dbPath)
     c = db.cursor()
     serverity = ["mild", "moderate", "high", "veryhigh", "identical"]
@@ -227,11 +227,11 @@ def writeToGraphviz(config, filename, users, dotLines, standAlone):
         header += "\ngraph match { \n\tnode[style=filled shape=point label= \"\"];"
         header += "\n\tsize=\"40.0,40.0\";"
         header += "\n\tfontsize=10.0;";
-        header += "\n\toverlap=false ;\n\tspline=true; \n\tnodesep=4.0;"
+        header += "\n\toverlap=false ;\n\tspline=true; \n\tnodesep=4.0;\n\n"
         f.write(header)
         # Write names of all students as nodes.
         for user in users:
-            f.write("{}\n".format(user))
+            f.write("\"{}\"\n".format(user))
         if "convicted" in filename:
             writeLines(f, dotLines, 0.60)
         elif "accused" in filename:
