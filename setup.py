@@ -9,9 +9,9 @@ def read(*paths):
 
 setup(
         name='code-sniffer'
-        , version='0.9.6'
+        , version='0.9.7'
         , description='A command-line tool to check plagiarim in text and pdf'
-        , long_description= read('README.rst') + read('CHANGES.rst')
+        , long_description= read('README.rst') 
         , url = 'https://dilawar.github.io/sniffer'
         , licence = 'GNU-GPL'
         , author = 'Dilawar Singh'
