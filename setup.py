@@ -10,6 +10,7 @@ def read(*paths):
 
 configDir = os.path.join(os.environ['HOME'], '.config', 'sniffer')
 if not os.path.isdir(configDir):
+    print("++ Creating {}".format(configDir))
     os.makedirs(configDir)
 
 setup(
@@ -24,7 +25,7 @@ setup(
         , maintainer = 'Dilawar Singh'
         , maintainer_email = 'dilawars@ncbs.res.in'
         , requires = ['Python (>=2.6)']
-        , install_requires = { "pdfminer"}
+        , install_requires = [ "pdf2text", "pdfminer" ]
         , packages=['sniffer' ]
         , include_package_data = True
         , data_files = [(configDir, ['config'])]

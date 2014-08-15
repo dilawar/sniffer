@@ -1,29 +1,9 @@
-from pdfminer.pdfinterp import PDFResourceManager, process_pdf
-from pdfminer.converter import TextConverter
-from pdfminer.layout import LAParams
 from cStringIO import StringIO
+import pdf2text
 
 class Pdf:
   def __init__(self) : pass
   
-  def getPdfText(self, path):
-    try:
-      rsrcmgr = PDFResourceManager()
-      retstr = StringIO()
-      codec = 'utf-8'
-      laparams = LAParams()
-      device = TextConverter(rsrcmgr, retstr, codec=codec, laparams=laparams)
-      fp = file(path, 'rb')
-      process_pdf(rsrcmgr, device, fp)
-      fp.close()
-      device.close()
-      str = retstr.getvalue()
-    except Exception as e:
-      return self.getPDFContent(path)
-    else:
-      retstr.close()
-      return str
-
   def fix_text(self, path):
     txt = ""
     # Using pdftotext program to convert pdf to text
