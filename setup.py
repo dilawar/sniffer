@@ -9,7 +9,7 @@ def read(*paths):
         return f.read()
 
 configDir = os.path.join(os.environ['HOME'], '.config', 'sniffer')
-if not configDir:
+if not os.path.isdir(configDir):
     os.makedirs(configDir)
 
 setup(
