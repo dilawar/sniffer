@@ -8,7 +8,7 @@ def read(*paths):
     with open(os.path.join(*paths), 'r') as f:
         return f.read()
 
-configDir = os.path.join(os.environ('HOME'), '.config', 'sniffer')
+configDir = os.path.join(os.environ['HOME'], '.config', 'sniffer')
 if not configDir:
     os.makedirs(configDir)
 
