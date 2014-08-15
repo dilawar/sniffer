@@ -27,7 +27,7 @@ setup(
         , install_requires = { "pdfminer"}
         , packages=['sniffer' ]
         , include_package_data = True
-        , data_files = [(configDir, ['snifferrc'])]
+        , data_files = [(configDir, ['config'])]
         , classifiers = [
             'Development Status :: 5 - Production/Stable',
             'Intended Audience :: Developers',

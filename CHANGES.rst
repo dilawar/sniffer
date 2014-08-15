@@ -14,3 +14,7 @@ Wed 05 Feb 2014 04:49:43 AM IST
 Thu 06 Feb 2014 01:17:08 PM IST
 
 - One node of each student whether they copied or not.
+
+Friday 15 August 2014 09:00:20 AM IST
+
+- Install config file by default.
