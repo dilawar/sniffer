@@ -25,7 +25,7 @@ setup(
         , maintainer = 'Dilawar Singh'
         , maintainer_email = 'dilawars@ncbs.res.in'
         , requires = ['Python (>=2.6)']
-        , install_requires = [ "pdf2text", "pdfminer" ]
+        , install_requires = [  "pdfminer" ]
         , packages=['sniffer' ]
         , include_package_data = True
         , data_files = [(configDir, ['config'])]

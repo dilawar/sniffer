@@ -220,7 +220,7 @@ def compare(config, db) :
               filePathA = os.path.join(rootA, nameA)
               filePathB = os.path.join(rootB, nameB)
               st = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-              print st
+              #print st
               print("\n[Match] : {2} {3} \n\t|- {0} <--> {1}".format(userA[0]+" : "+nameA,
                 userB[0]+" : "+nameB , ratio, msg))
               c.execute(query, (userA[0], filePathA, userB[0], filePathB, ratio,
