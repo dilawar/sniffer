@@ -27,6 +27,7 @@ setup(
         , requires = ['Python (>=2.6)']
         , install_requires = [  "pdfminer" ]
         , packages=['sniffer' ]
+        , package_data = { 'sniffer' : [ 'config' ] }
         , include_package_data = True
         , data_files = [(configDir, ['config'])]
         , classifiers = [
