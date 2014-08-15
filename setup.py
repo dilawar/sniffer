@@ -1,4 +1,5 @@
 import os
+import sys
 
 from setuptools import setup
 
@@ -7,21 +8,26 @@ def read(*paths):
     with open(os.path.join(*paths), 'r') as f:
         return f.read()
 
+configDir = os.path.join(os.environ('HOME'), '.config', 'sniffer')
+if not configDir:
+    os.makedirs(configDir)
+
 setup(
         name='code-sniffer'
-        , version='0.9.7'
+        , version='0.9.8'
         , description='A command-line tool to check plagiarim in text and pdf'
         , long_description= read('README.rst') 
         , url = 'https://dilawar.github.io/sniffer'
-        , licence = 'GNU-GPL'
+        , license = 'LGPL'
         , author = 'Dilawar Singh'
-        , author_email = 'dilawars@iitb.ac.in'
+        , author_email = 'dilawars@ncbs.res.in'
         , maintainer = 'Dilawar Singh'
-        , maintainer_email = 'dilawars@iitb.ac.in'
+        , maintainer_email = 'dilawars@ncbs.res.in'
         , requires = ['Python (>=2.6)']
         , install_requires = { "pdfminer"}
         , packages=['sniffer' ]
         , include_package_data = True
+        , data_files = [(configDir, ['snifferrc'])]
         , classifiers = [
             'Development Status :: 5 - Production/Stable',
             'Intended Audience :: Developers',
