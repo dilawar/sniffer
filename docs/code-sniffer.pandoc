@@ -1,0 +1,33 @@
+---
+title: The Code-Sniffer
+author: Dilawar Singh
+date : \today 
+header-includes:
+    - \usepackage[margin=15mm]{geometry}
+---
+
+## Abstract
+
+This document describes the python based project
+[code-sniffer](https://github.com/dilawar/code-sniffer). 
+
+## Introduction
+
+The code-sniffer sniffs code for plagiarism. It works on text files, and on pdf
+after converting them to text files. It works well on programming languages. See
+the [project page](https://dilawar.github.io/sniffer) for results.
+
+
+## Technical details
+
+This application compares files available in a user's directory with all files
+available in other user's directory. For $n$ users, each file of each user is
+compared with every other. In nutshell, its break down to compare two text files
+for copying which it does in following way:
+
+
+### Algorithm to check plagiarism 
+
+1. Read fileA and fileB.
+
+
