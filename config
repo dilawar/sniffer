@@ -26,7 +26,7 @@
 # |   |   +-- test.vhd
 # |   +-- b.vhd
 # 
-dir = /home/dilawar/Bhandar/Plagiarism/EE671
+dir = /home_local/dilawars/Downloads/test/
 
 # These are the extension of files we want of files. If you want to compare
 # all files leave it empty or .* will do. 
@@ -66,5 +66,5 @@ name = difflib
 
 [database]
 # path : Path where sqlite3 database should be saved. 
-path = /home/dilawar/Downloads/
+path = /home_local/dilawars/Downloads/
 

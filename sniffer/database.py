@@ -25,7 +25,12 @@ def buildListingDb(config) :
           os.rename(dbfile, dbfile+time.strftime("%Y%m%d%H%M%S"))
         else :
           pass 
-      db = sql.connect(dbfile)
+      try:
+        db = sql.connect(dbfile)
+      except Exception as e:
+        print("[ERROR] Could not open %s" % dbfile)
+        print("[ERROR] Please make sure that directory exists and writable")
+        quit()
     else :
       db = sql.connect(dbName)
 
