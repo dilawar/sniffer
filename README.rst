@@ -1,8 +1,7 @@
 About
 -----
 
-This program is intended to be used to check plagiarism in assignments. It is a
-poor man's `MOSS <http://theory.stanford.edu/~aiken/moss/>`_.
+This program was written to check plagiarism/copying in assignments students submitted. 
 
 Usage 
 =====
