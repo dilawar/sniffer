@@ -1,6 +1,7 @@
 import sqlite3 as sql
 import os, sys
 import difflib
+import logging
 
 def formatText(txt, lang) :
   if lang == "vhdl" :
@@ -46,6 +47,7 @@ def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
 
     # if intersection of these two set is very small then there is little
     # maching in these two files.
+    logging.debug("Computing matching using difflib")
     s = difflib.SequenceMatcher(None, textA, textB)
     return "difflib", s.ratio()
 
