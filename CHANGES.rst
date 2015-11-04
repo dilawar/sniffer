@@ -18,3 +18,7 @@ Thu 06 Feb 2014 01:17:08 PM IST
 Friday 15 August 2014 09:00:20 AM IST
 
 - Install config file by default.
+
+Wednesday 04 November 2015 02:38:44 PM IST
+
+- Fixed few bugs. Added wiki as main documentation place.

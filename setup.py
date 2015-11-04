@@ -15,7 +15,7 @@ if not os.path.isdir(configDir):
 
 setup(
         name='code-sniffer'
-        , version='0.9.8'
+        , version='0.9.9'
         , description='A command-line tool to check plagiarim in text and pdf'
         , long_description= read('README.rst') 
         , url = 'https://dilawar.github.io/sniffer'
