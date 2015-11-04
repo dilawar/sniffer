@@ -7,5 +7,4 @@ poor man's `MOSS <http://theory.stanford.edu/~aiken/moss/>`_.
 Usage 
 =====
 
-See the `Wiki <http://gitub.com/dilawar/sniffer/wiki>` for more details.
-
+See the `Wiki <http://github.com/dilawar/sniffer/wiki/>` for more details_.
