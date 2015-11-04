@@ -16,8 +16,7 @@ if not os.path.isdir(configDir):
 setup(
         name='code-sniffer'
         , version='0.9.9'
-        , description='A command-line tool to check similarity in assignment
-        (text files only)'
+        , description='A command-line tool to check similarity in assignment (text files only)'
         , long_description= read('README.rst') 
         , url = 'https://dilawar.github.io/sniffer'
         , license = 'LGPL'
