@@ -1,3 +1,3 @@
 #!/bin/bash
-#python setup.py build
-python sniffer/main.py
+PYTHON=`which python`
+$PYTHON sniffer/main.py "$@"

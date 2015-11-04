@@ -5,7 +5,6 @@ import argparse
 import database
 import compare
 
-
 def main():
     '''
     Main function.
