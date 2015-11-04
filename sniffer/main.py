@@ -5,6 +5,11 @@ import argparse
 import database
 import compare
 
+try:
+    import ConfigParser as cfg
+except Exception as e:
+    import configparser as cfg
+
 def main():
     '''
     Main function.
@@ -24,7 +29,6 @@ def main():
         sys.exit(0)
   
     # else parse it.
-    import ConfigParser as cfg
     config = cfg.ConfigParser()
     config.read(configFile)
     db = database.buildListingDb(config)
