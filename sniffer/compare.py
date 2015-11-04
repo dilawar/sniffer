@@ -181,12 +181,12 @@ def compare(config, db) :
   totalUsers = len(listings)
   for userA in listings :
     i += 1
-    print("\n\n== Comparing for userA : {0}".format(userA[0]))
-    print("[I] Processing {0} out of {1}".format(i, totalUsers))
+    logging.info("\n\n== Comparing for userA : {0}".format(userA[0]))
+    logging.info("Processing {0} out of {1}".format(i, totalUsers))
     userComparisons = 0
     filesA = listings[userA]
     if len(filesA) == 0 :
-      print("[W] No files for user")
+      print.info("No files for user")
     # Delete this user from dictionary
     oldLength = sum([len(x) for x in tempListings.values()])
     tempListings.pop(userA, None)
@@ -227,9 +227,9 @@ def compare(config, db) :
                 res, result))
           userComparisons += 1
     totalComparisions += userComparisons
-    print("[II] For user {0} : {1} comparisions".format(userA[0], userComparisons))
+    logging.info("| For user {0} : {1} comparisions".format(userA[0], userComparisons))
     db.commit()
-  print("[I] Total {0} comparisions".format(totalComparisions))
+  logging.info("Total {0} comparisions".format(totalComparisions))
 
 def compareTwoFiles(config, db, userA, fileA, userB, fileB, msg) :
   language = config.get('source', 'language')

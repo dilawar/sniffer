@@ -20,7 +20,7 @@ def formatText(txt, lang) :
   if lang == "text":
       return txt
   else :
-    print("[W] This language is not supported. Assuming text ...")
+    logging.warn("This language is not supported. Assuming text ...")
     return txt
 
 def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
@@ -52,7 +52,7 @@ def compareAndReturnResult(textA, textB, algorithm="subsequence" ) :
     return "difflib", s.ratio()
 
   else :
-    print("[E] Algorithm not specified")
+    logging.error("Algorithm not specified")
     sys.exit(0)
 
 

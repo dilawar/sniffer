@@ -36,7 +36,7 @@ def main():
   
     # check if file exists .
     if not os.path.exists(configFile) :
-        print("[E] File {0} does not exists".format(configFile))
+        logging.error("File {0} does not exists".format(configFile))
         sys.exit(0)
   
     # else parse it.
