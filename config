@@ -26,7 +26,7 @@
 # |   |   +-- test.vhd
 # |   +-- b.vhd
 # 
-dir = /home_local/dilawars/Downloads/test/
+dir = /home_local/dilawars/Work/PLAYGROUND/SNIFFER/_files/
 
 # These are the extension of files we want of files. If you want to compare
 # all files leave it empty or .* will do. 
@@ -34,7 +34,7 @@ extension = cir, spice
 
 # Specify language of file.
 # Available : vhdl, verilog, ctype, text, pdf 
-language = vhdl
+language = *
 
 # Dump the results of analysis in directory of database.
 dump_result = true 
@@ -56,9 +56,9 @@ regex_flags = DOTALL,IGNORECASE
 max_size = -1
 
 # Max words a text file can contains. -1 for 2^32.
-max_words = 8000
+max_words = 800000
 # Mininum words a text files must contain.
-min_words = 100
+min_words = 10
 
 [algorithm]
 # Available algoritms : difflib, quick, 
@@ -66,5 +66,5 @@ name = difflib
 
 [database]
 # path : Path where sqlite3 database should be saved. 
-path = /home_local/dilawars/Downloads/
+path = /home_local/dilawars/Work/PLAYGROUND/SNIFFER/
 

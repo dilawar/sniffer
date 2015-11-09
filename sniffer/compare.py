@@ -3,6 +3,7 @@ import re
 import os
 import algorithm
 import database
+import logging
 import datetime
 import sys
 
@@ -186,7 +187,7 @@ def compare(config, db) :
     userComparisons = 0
     filesA = listings[userA]
     if len(filesA) == 0 :
-      print.info("No files for user")
+      logging.info("No files for user")
     # Delete this user from dictionary
     oldLength = sum([len(x) for x in tempListings.values()])
     tempListings.pop(userA, None)
