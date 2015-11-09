@@ -83,7 +83,7 @@ def initializeDb(db) :
 
 def populateDB(config, db) :
     c = db.cursor()
-    dir = config.get('source', 'dir')
+    srcDir = config.get('source', 'dir')
     extension = config.get('source', 'extension')
     if len(extension.strip()) == 0 :
         regex = ".*"
@@ -91,11 +91,11 @@ def populateDB(config, db) :
         extension = [x.strip() for x in extension.split(',')]
         regex = r".*?\.({})$".format('|'.join(extension))
     pat = re.compile(regex, re.IGNORECASE)
-    if not os.path.exists(dir) :
-      print("[E] source dir does not exists. Check config file.")
+    if not os.path.exists(srcDir) :
+      print("[E] Directory %s does not exists. Check config file." % srcDir)
       sys.exit(0)
     countFile = 0
-    for root, dirs, files in os.walk(dir) :
+    for root, dirs, files in os.walk(srcDir) :
       for file in files :
         if pat.match(file) :
           countFile += 1
@@ -106,7 +106,7 @@ def populateDB(config, db) :
                 exists".format(filePath))
             return 
           sizeOfFile = os.path.getsize(filePath)
-          owner = root.replace(dir, "")
+          owner = root.replace(srcDir, "")
           owner = owner.strip("/")
           owner = owner.split("/")[0]
           query = '''INSERT INTO listings (name, root, size, type, owner)
