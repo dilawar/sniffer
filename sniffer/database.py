@@ -5,12 +5,12 @@ import algorithm
 import sys
 import re
 
-inMemDb = sql.connect(":memory:")
+# inMemDb = sql.connect(":memory:")
 dbName = 'sniffer.sqlite3'
 
 def buildListingDb(config) :
     global dbName
-    dbPath = config.get('database', 'path')
+    dbPath = os.path.expanduser( config.get('database', 'path') )
     iscomparing = True
     print("[I] Creating db in {0}".format(dbPath))
     try :
@@ -83,7 +83,7 @@ def initializeDb(db) :
 
 def populateDB(config, db) :
     c = db.cursor()
-    srcDir = config.get('source', 'dir')
+    srcDir = os.path.expanduser( config.get('source', 'dir') )
     extension = config.get('source', 'extension')
     if len(extension.strip()) == 0 :
         regex = ".*"
@@ -112,14 +112,22 @@ def populateDB(config, db) :
           query = '''INSERT INTO listings (name, root, size, type, owner)
               VALUES (?, ?, ?, ?, ?)'''
           c.execute(query, (fileName, root, sizeOfFile, regex, owner))
-    db.commit()
+    try:
+        db.commit()
+    except Exception as e:
+        print( "[W] Failed to write to database: %s" % e )
+        quit( )
+
+    if( countFile < 1 ):
+        print("[W] There are no programs to compare. Please check the settings")
+        exit( 1 )
     print("[I] Total {0} programs".format(countFile))
     return db 
 
 def writeContent(config, db):
     global dbName
-    path = config.get('database', 'path')
-    srcdir = config.get('source', 'dir')
+    path = os.path.expanduser( config.get('database', 'path') )
+    srcdir = os.path.expanduser( config.get('source', 'dir') )
     srcdir = srcdir.strip("/")
     srcdir += "/"
     name = dbName
@@ -223,7 +231,7 @@ def genrateDOT(config, db) :
 
 def writeToGraphviz(config, filename, users, dotLines, standAlone):
     global dbName
-    dbPath = config.get("database", "path")
+    dbPath = os.path.expanduser( config.get("database", "path") )
     path = os.path.join(dbPath, filename+".sh")
     with open(path, "w") as f:
         header = "#!/bin/bash\n"

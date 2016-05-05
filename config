@@ -26,15 +26,15 @@
 # |   |   +-- test.vhd
 # |   +-- b.vhd
 # 
-dir = /home_local/dilawars/Work/PLAYGROUND/SNIFFER/_files/
+dir = ~/_DATA/SNIFFER/samples/
 
 # These are the extension of files we want of files. If you want to compare
 # all files leave it empty or .* will do. 
-extension = cir, spice
+extension = .*
 
 # Specify language of file.
 # Available : vhdl, verilog, ctype, text, pdf 
-language = *
+language = vhdl
 
 # Dump the results of analysis in directory of database.
 dump_result = true 
@@ -66,5 +66,5 @@ name = difflib
 
 [database]
 # path : Path where sqlite3 database should be saved. 
-path = /home_local/dilawars/Work/PLAYGROUND/SNIFFER/
+path = ~/_DATA/SNIFFER/
 
